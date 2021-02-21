@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Snake from './Snake';
 import Food from './Food';
@@ -24,11 +24,16 @@ const GameField = styled.div`
 const initialState = {
   foodCords: getRandomCoordinates(),
   direction: 'RIGHT',
-  moveSpeed: 200,
+  moveSpeed: 500,
   snakeDots: [
     [0, 0],
     [0, 2],
     [0, 4],
+    [0, 6],
+    [0, 8],
+    [0, 10],
+    [0, 12],
+    [0, 14]
   ]
 };
 
@@ -41,16 +46,18 @@ export default class Game extends React.Component<IGameProps, IGameState> {
   }
 
   handleKeyDown = (event: KeyboardEvent): void => {
-    const { keyCode } = event; // ! It's Deprecated! Rewrite this to key.
+    const { code } = event;
 
-    if (keyCode === 119 && this.state.direction !== 'DOWN') {
+    if (code === 'KeyW' && this.state.direction !== 'DOWN') {
       this.setState({ direction: 'UP' });
-    } else if (keyCode === 115 && this.state.direction !== 'UP') {
+    } else if (code === 'KeyS' && this.state.direction !== 'UP') {
       this.setState({ direction: 'DOWN' });
-    } else if (keyCode === 97 && this.state.direction !== 'RIGHT') {
+    } else if (code === 'KeyA' && this.state.direction !== 'RIGHT') {
       this.setState({ direction: 'LEFT' });
-    } else if (keyCode === 100 && this.state.direction !== 'LEFT') {
+    } else if (code === 'KeyD' && this.state.direction !== 'LEFT') {
       this.setState({ direction: 'RIGHT' });
+    } else if (code === 'Escape') {
+      // this.gameControle(false);
     }
   }
 
@@ -132,7 +139,7 @@ export default class Game extends React.Component<IGameProps, IGameState> {
 
   componentDidMount = () => {
     setInterval(this.moveSnake, this.state.moveSpeed);
-    window.addEventListener('keypress', this.handleKeyDown);
+    window.addEventListener('keydown', this.handleKeyDown);
   }
 
   componentDidUpdate = () => {
