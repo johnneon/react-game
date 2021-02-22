@@ -2,8 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import Snake from './Snake';
 import Food from './Food';
-import { getRandomCoordinates } from '../utils/utils';
-import { variables } from '../variables';
+import { getRandomCoordinates } from '../../utils/utils';
+import { variables } from '../../variables';
+import Axis from './Axis';
 
 const {
   UP,
@@ -28,10 +29,14 @@ interface IGameState {
 }
 
 const GameField = styled.div`
+  display: flex;
+  flex-wrap: wrap;
   width: 600px;
   height: 600px;
-  border: 2px solid #000;
+  border: 2px solid rgba(255, 255, 255, .3)ы;
+  background: #222;
   position: relative;
+  box-shadow: 0 0 20px 0px rgba(255, 255, 255, .3);
 `;
 
 const initialState = {
@@ -57,10 +62,11 @@ const initialState = {
   ]
 };
 
-
 export default class Game extends React.Component<IGameProps, IGameState> {
   interval: number;
   isStoped: boolean;
+  commandQueue: string[];
+  grid: null[];
 
   constructor(props: IGameProps | Readonly<IGameProps>) {
     super(props);
@@ -69,18 +75,22 @@ export default class Game extends React.Component<IGameProps, IGameState> {
 
     this.interval = 0;
     this.isStoped = false;
+    this.commandQueue = [];
+    this.moveSnake = this.moveSnake.bind(this);
+    this.grid = new Array(50).fill(null);
   }
   handleKeyDown = (event: KeyboardEvent) => {
     const { code } = event;
+    const { direction } = this.state;
 
-    if (code === KEY_W && this.state.direction !== DOWN) {
-      this.setState({ direction: UP });
-    } else if (code === KEY_S && this.state.direction !== UP) {
-      this.setState({ direction: DOWN });
-    } else if (code === KEY_A && this.state.direction !== RIGHT) {
-      this.setState({ direction: LEFT });
-    } else if (code === KEY_D && this.state.direction !== LEFT) {
-      this.setState({ direction: RIGHT });
+    if (code === KEY_W && direction !== DOWN) {
+      this.commandQueue.push(UP);
+    } else if (code === KEY_S && direction !== UP) {
+      this.commandQueue.push(DOWN);
+    } else if (code === KEY_A && direction !== RIGHT) {
+      this.commandQueue.push(LEFT);
+    } else if (code === KEY_D && direction !== LEFT) {
+      this.commandQueue.push(RIGHT);
     } else if (code === KEY_ESCAPE) {
       if (!this.isStoped) {
         this.isStoped = true;
@@ -114,6 +124,13 @@ export default class Game extends React.Component<IGameProps, IGameState> {
 
     dots.push(head);
     dots.shift();
+
+    if (this.commandQueue.length > 0) {
+      const command = this.commandQueue.shift() || '';
+      this.setState({ direction: command })
+      console.log(command);
+    }
+
     this.setState({ snakeDots: dots });
   };
 
@@ -133,8 +150,9 @@ export default class Game extends React.Component<IGameProps, IGameState> {
   increaseSpeed = () => {
     if (this.state.moveSpeed > 10) {
       this.setState({
-        moveSpeed: this.state.moveSpeed - 10
+        moveSpeed: this.state.moveSpeed - 2
       });
+      this.play();
     }
   }
 
@@ -146,7 +164,7 @@ export default class Game extends React.Component<IGameProps, IGameState> {
         foodCords: getRandomCoordinates()
       })
       this.eanlargeSnake();
-      // ! this.increaseSpeed(); Допилить
+      this.increaseSpeed();
     }
   }
 
@@ -170,6 +188,9 @@ export default class Game extends React.Component<IGameProps, IGameState> {
   }
 
   play = () => {
+    if (this.interval) {
+      clearInterval(this.interval);
+    }
     this.interval = window.setInterval(this.moveSnake, this.state.moveSpeed);
   }
 
@@ -182,6 +203,10 @@ export default class Game extends React.Component<IGameProps, IGameState> {
     window.addEventListener('keydown', this.handleKeyDown);
   }
 
+  componentWillUnmount = () => {
+    window.removeEventListener('keydown', this.handleKeyDown);
+  }
+
   componentDidUpdate = () => {
     this.checkIfOutOfBorderes();
     this.checkIfCollapsed();
@@ -191,9 +216,10 @@ export default class Game extends React.Component<IGameProps, IGameState> {
   public render() {
     return (
       <GameField>
-        <p>{this.state.direction}</p>
         <Snake snakeDots={this.state.snakeDots} />
         <Food dot={this.state.foodCords} />
+        <Axis direction={DOWN} quantity={this.grid} />
+        <Axis direction={RIGHT} quantity={this.grid} />
       </GameField>
     );
   }

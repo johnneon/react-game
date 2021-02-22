@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { rotationCalculate } from '../utils/utils';
-import { variables } from '../variables';
+import { calculateOpacity, rotationCalculate } from '../../utils/utils';
+import { variables } from '../../variables';
 
 const {
   UP,
@@ -16,6 +16,7 @@ interface ISnakeProps {
 type StyledProps = {
   head: boolean;
   ternPart: string;
+  opacity: number
 }
 
 const SnakeDot = styled.div`
@@ -25,15 +26,18 @@ const SnakeDot = styled.div`
   position: absolute;
   z-index: 2;
 
-  background: ${(props: StyledProps) => props.head ? 'green' : '#000'};
+  background: ${(props: StyledProps) => `rgba(255, 255, 255, ${props.opacity})`};
+  box-shadow: ${(props: StyledProps) => props.head ? '0 0 15px 3px rgba(255, 255, 255, .5)' : '0'};
   border-radius: ${(props: StyledProps) => {
     let radius = '0px 0px 0px 0px';
+
     const [top, right, down, left] = [
       '10px 0px 0px 0px',
       '0px 10px 0px 0px',
       '0px 0px 10px 0px',
       '0px 00px 0px 10px'
     ];
+
     switch (props.ternPart) {
       case UP:
         radius = top;
@@ -55,10 +59,13 @@ const SnakeDot = styled.div`
 
     return radius;
   }};
-  transition: all .1s linear;
 `;
 
 const Snake: React.FunctionComponent<ISnakeProps> = (props) => {
+  const { snakeDots } = props;
+
+  const opacity = calculateOpacity(snakeDots);
+
   return (
     <>
       {props.snakeDots.map((dot: number[], i) => {
@@ -83,6 +90,7 @@ const Snake: React.FunctionComponent<ISnakeProps> = (props) => {
         return (
           <SnakeDot
             ternPart={ternPart}
+            opacity={opacity[i]}
             head={i === props.snakeDots.length - 1 ? true : false}
             style={style} key={i}
           />

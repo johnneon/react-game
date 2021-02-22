@@ -8,7 +8,7 @@ const {
   LEFT,
 } = variables;
 
-export const getRandomCoordinates = () => {
+export const getRandomCoordinates = (): number[] => {
   let min = 1;
   let max = 98;
   let x = Math.floor((Math.random() * (max - min + 1) + min) / 2) * 2;
@@ -24,7 +24,7 @@ export const rotationCalculate = ({
   left,
   nextLeft,
   prevLeft
-}: IRotateTerns) => {
+}: IRotateTerns): string => {
   let ternPart: string = '';
 
   if (top < nextTop && top === prevTop) {
@@ -56,4 +56,21 @@ export const rotationCalculate = ({
   }
 
   return ternPart;
-}
+};
+
+export const calculateOpacity = (num: Array<number[]>): number[] => {
+  const len = num.length;
+  
+  const divider = 1.2;
+  const hundredPercent = 100;
+  const procient = hundredPercent / len;
+
+  const result = num
+    .map((el, ind) => {
+      const result = (hundredPercent - (procient * ind / divider)) / hundredPercent;
+      return result;
+    })
+    .reverse();
+
+  return result;
+};
