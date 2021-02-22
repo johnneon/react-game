@@ -2,8 +2,21 @@ import React from 'react';
 import styled from 'styled-components';
 import Snake from './Snake';
 import Food from './Food';
-import { getRandomCoordinates } from '../utils/randomNum';
+import { getRandomCoordinates } from '../utils/utils';
+import { variables } from '../variables';
 
+const {
+  UP,
+  DOWN,
+  RIGHT,
+  LEFT,
+  KEY_A,
+  KEY_W,
+  KEY_D,
+  KEY_S,
+  KEY_ESCAPE,
+  STEP
+} = variables;
 interface IGameProps {
 }
 
@@ -23,8 +36,8 @@ const GameField = styled.div`
 
 const initialState = {
   foodCords: getRandomCoordinates(),
-  direction: 'RIGHT',
-  moveSpeed: 500,
+  direction: RIGHT,
+  moveSpeed: 100,
   snakeDots: [
     [0, 0],
     [0, 2],
@@ -33,50 +46,69 @@ const initialState = {
     [0, 8],
     [0, 10],
     [0, 12],
-    [0, 14]
+    [0, 14],
+    [0, 16],
+    [0, 18],
+    [0, 20],
+    [0, 22],
+    [0, 24],
+    [0, 26],
+    [0, 28]
   ]
 };
 
 
 export default class Game extends React.Component<IGameProps, IGameState> {
+  interval: number;
+  isStoped: boolean;
+
   constructor(props: IGameProps | Readonly<IGameProps>) {
     super(props);
 
     this.state  = initialState;
-  }
 
-  handleKeyDown = (event: KeyboardEvent): void => {
+    this.interval = 0;
+    this.isStoped = false;
+  }
+  handleKeyDown = (event: KeyboardEvent) => {
     const { code } = event;
 
-    if (code === 'KeyW' && this.state.direction !== 'DOWN') {
-      this.setState({ direction: 'UP' });
-    } else if (code === 'KeyS' && this.state.direction !== 'UP') {
-      this.setState({ direction: 'DOWN' });
-    } else if (code === 'KeyA' && this.state.direction !== 'RIGHT') {
-      this.setState({ direction: 'LEFT' });
-    } else if (code === 'KeyD' && this.state.direction !== 'LEFT') {
-      this.setState({ direction: 'RIGHT' });
-    } else if (code === 'Escape') {
-      // this.gameControle(false);
+    if (code === KEY_W && this.state.direction !== DOWN) {
+      this.setState({ direction: UP });
+    } else if (code === KEY_S && this.state.direction !== UP) {
+      this.setState({ direction: DOWN });
+    } else if (code === KEY_A && this.state.direction !== RIGHT) {
+      this.setState({ direction: LEFT });
+    } else if (code === KEY_D && this.state.direction !== LEFT) {
+      this.setState({ direction: RIGHT });
+    } else if (code === KEY_ESCAPE) {
+      if (!this.isStoped) {
+        this.isStoped = true;
+        this.pouse();
+      } else {
+        this.isStoped = false;
+        this.play();
+      }
     }
   }
 
   moveSnake = () => {
     const dots: Array<number[]> = Array.from(this.state.snakeDots);
     let head = dots[dots.length - 1];
+    const [top, left] = head;
 
     switch (this.state.direction) {
-      case 'UP':
-        head = [head[0] - 2, head[1]];
+      case UP:
+        head = [top - STEP, left];
         break;
-      case 'DOWN':
-        head = [head[0] + 2, head[1]];
+      case DOWN:
+        head = [top + STEP, left];
         break;
-      case 'LEFT':
-        head = [head[0], head[1] - 2];
+      case LEFT:
+        head = [top, left - STEP];
         break;
-      case 'RIGHT':
-        head = [head[0], head[1] + 2];
+      case RIGHT:
+        head = [top, left + STEP];
         break;
     }
 
@@ -114,7 +146,7 @@ export default class Game extends React.Component<IGameProps, IGameState> {
         foodCords: getRandomCoordinates()
       })
       this.eanlargeSnake();
-      this.increaseSpeed();
+      // ! this.increaseSpeed(); Допилить
     }
   }
 
@@ -137,8 +169,16 @@ export default class Game extends React.Component<IGameProps, IGameState> {
     }
   }
 
+  play = () => {
+    this.interval = window.setInterval(this.moveSnake, this.state.moveSpeed);
+  }
+
+  pouse = () => {
+    clearInterval(this.interval);
+  }
+
   componentDidMount = () => {
-    setInterval(this.moveSnake, this.state.moveSpeed);
+    this.play();
     window.addEventListener('keydown', this.handleKeyDown);
   }
 

@@ -1,6 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
+import { rotationCalculate } from '../utils/utils';
+import { variables } from '../variables';
 
+const {
+  UP,
+  DOWN,
+  RIGHT,
+  LEFT,
+} = variables;
 interface ISnakeProps {
   snakeDots: Array<number[]>;
 }
@@ -20,19 +28,24 @@ const SnakeDot = styled.div`
   background: ${(props: StyledProps) => props.head ? 'green' : '#000'};
   border-radius: ${(props: StyledProps) => {
     let radius = '0px 0px 0px 0px';
-    // ! В общем... Ты остановлися на закруглении краев змейки и паузе в игре.
+    const [top, right, down, left] = [
+      '10px 0px 0px 0px',
+      '0px 10px 0px 0px',
+      '0px 0px 10px 0px',
+      '0px 00px 0px 10px'
+    ];
     switch (props.ternPart) {
-      case 'UP':
-        radius = '0px 0px 5px 0px';
+      case UP:
+        radius = top;
         break;
-      case 'DOWN':
-        radius = '0px 5px 0px 0px';
+      case DOWN:
+        radius = down;
         break;
-      case 'RIGHT':
-        radius = '5px 0px 0px 0px';
+      case RIGHT:
+        radius = right;
         break;
-      case 'LEFT':
-        radius = '0px 0px 0px 5px';
+      case LEFT:
+        radius = left;
         break;
     
       default:
@@ -42,8 +55,7 @@ const SnakeDot = styled.div`
 
     return radius;
   }};
-  border: 1px solid #fff;
-  transition: all .5s linear;
+  transition: all .1s linear;
 `;
 
 const Snake: React.FunctionComponent<ISnakeProps> = (props) => {
@@ -53,23 +65,20 @@ const Snake: React.FunctionComponent<ISnakeProps> = (props) => {
         const [top, left] = dot;
         const [nextTop, nextLeft] = props.snakeDots[i + 1] || [];
         const [prevTop, prevLeft] = props.snakeDots[i - 1] || [];
+
         const style = {
           top: `${top}%`,
           left: `${left}%`
         };
-        let ternPart: string = '';
 
-        if (top < nextTop && top === prevTop) {
-          ternPart = 'UP';
-        } else if (top > nextTop && top === prevTop) {
-          ternPart = 'DOWN';
-        }
-        if (left < nextLeft && left === prevLeft) {
-          ternPart = 'RIGHT';
-          console.log('right')
-        } else if (left > nextLeft && left === prevLeft) {
-          ternPart = 'LEFT';
-        }
+        let ternPart: string = rotationCalculate({
+          top,
+          nextTop,
+          prevTop,
+          left,
+          nextLeft,
+          prevLeft
+        });
 
         return (
           <SnakeDot
