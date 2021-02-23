@@ -22,8 +22,8 @@ const scale = keyframes`
 const FoodItem = styled.div`
   position: absolute;
   z-index: 1;
-  width: 2%;
-  height: 2%;
+  width: calc(2% + 1px);
+  height: calc(2% + 1px);
   background: #15b104;
   box-shadow: 0 0 15px 3px rgba(21, 177, 4, .7);
   border-bottom: 1px solid #15b104;

@@ -20,8 +20,8 @@ type StyledProps = {
 }
 
 const SnakeDot = styled.div`
-  width: 2%;
-  height: 2%;
+  width: calc(2% + 1px);
+  height: calc(2% + 1px);
 
   position: absolute;
   z-index: 2;

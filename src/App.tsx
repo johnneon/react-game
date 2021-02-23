@@ -1,25 +1,42 @@
 import React, { useState } from 'react';
-import styled, { ThemeProvider } from 'styled-components';
+import { makeStyles } from '@material-ui/core/styles';
+import styled from 'styled-components';
 import Game from './components/Game/Game';
-import { DarkTheme } from './themes/DarkTheme';
-import { LightTheme } from './themes/LightTheme';
+import Header from './components/UI/Header';
+import Footer from './components/UI/Footer';
 
 const Wrapper = styled.div`
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center; 
+  position: relative;
 `;
 
+const useStyles = makeStyles({
+  wrapper: {
+    background: '#222',
+    color: 'white',
+  },
+  sidebar: {
+    position: 'absolute',
+    width: 240,
+  }
+});
+
 function App() {
-  const [theme, setTheme] = useState(DarkTheme);
-  
+  const classes = useStyles();
+  const [open, setOpen] = useState(false);
+
+  const handleClick = () => {
+    setOpen(!open);
+  };
+
   return (
     <Wrapper>
-      <ThemeProvider theme={theme}>
-        <Game />
-      </ThemeProvider>
+
+      <Header toggleSidebar={handleClick} />
+
+      <Game />
+
+      <Footer />
+
     </Wrapper>
   );
 }

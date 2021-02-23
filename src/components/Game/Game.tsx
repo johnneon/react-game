@@ -33,7 +33,7 @@ const GameField = styled.div`
   flex-wrap: wrap;
   width: 600px;
   height: 600px;
-  border: 2px solid rgba(255, 255, 255, .3)ы;
+  border: 2px solid rgba(255, 255, 255, .3);
   background: #222;
   position: relative;
   box-shadow: 0 0 20px 0px rgba(255, 255, 255, .3);
@@ -41,24 +41,12 @@ const GameField = styled.div`
 
 const initialState = {
   foodCords: getRandomCoordinates(),
-  direction: RIGHT,
+  direction: UP,
   moveSpeed: 100,
   snakeDots: [
-    [0, 0],
-    [0, 2],
-    [0, 4],
-    [0, 6],
-    [0, 8],
-    [0, 10],
-    [0, 12],
-    [0, 14],
-    [0, 16],
-    [0, 18],
-    [0, 20],
-    [0, 22],
-    [0, 24],
-    [0, 26],
-    [0, 28]
+    [52,48],
+    [50, 48],
+    [48, 48],
   ]
 };
 
@@ -199,7 +187,7 @@ export default class Game extends React.Component<IGameProps, IGameState> {
   }
 
   componentDidMount = () => {
-    this.play();
+    // this.play();
     window.addEventListener('keydown', this.handleKeyDown);
   }
 
