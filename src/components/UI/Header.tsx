@@ -7,7 +7,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 
 interface IHeaderProps {
-  toggleSidebar: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  toggleMenu: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 const useStyles = makeStyles({
@@ -24,7 +24,7 @@ const Header: React.FunctionComponent<IHeaderProps> = (props) => {
     <AppBar className={classes.wrapper} position="static">
 
       <Toolbar>
-        <IconButton onClick={props.toggleSidebar} edge="start" color="inherit" aria-label="menu">
+        <IconButton onClick={props.toggleMenu} edge="start" color="inherit" aria-label="menu">
           <MenuIcon />
         </IconButton>
         <Typography variant="h6">

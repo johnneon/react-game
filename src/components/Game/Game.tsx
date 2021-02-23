@@ -19,6 +19,8 @@ const {
   STEP
 } = variables;
 interface IGameProps {
+  pouse: boolean;
+  togglePouse: VoidFunction;
 }
 
 interface IGameState {
@@ -83,9 +85,11 @@ export default class Game extends React.Component<IGameProps, IGameState> {
       if (!this.isStoped) {
         this.isStoped = true;
         this.pouse();
+        this.props.togglePouse();
       } else {
         this.isStoped = false;
         this.play();
+        this.props.togglePouse();
       }
     }
   }

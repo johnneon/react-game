@@ -1,43 +1,41 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import styled from 'styled-components';
+import { Box } from '@material-ui/core';
 import Game from './components/Game/Game';
 import Header from './components/UI/Header';
 import Footer from './components/UI/Footer';
-
-const Wrapper = styled.div`
-  position: relative;
-`;
+import Menu from './components/UI/Menu';
 
 const useStyles = makeStyles({
   wrapper: {
-    background: '#222',
-    color: 'white',
+    position: 'relative',
   },
-  sidebar: {
-    position: 'absolute',
-    width: 240,
+  gameWrap: {
+    position: 'relative',
   }
 });
 
 function App() {
   const classes = useStyles();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
 
-  const handleClick = () => {
+  const toggleMenu = () => {
     setOpen(!open);
   };
 
   return (
-    <Wrapper>
+    <Box className={classes.gameWrap}>
 
-      <Header toggleSidebar={handleClick} />
+      <Header toggleMenu={toggleMenu} />
 
-      <Game />
+      <Box className={classes.gameWrap}>
+        <Game pouse={open} togglePouse={toggleMenu} />
+        <Menu open={open} />
+      </Box>
 
       <Footer />
 
-    </Wrapper>
+    </Box>
   );
 }
 
