@@ -20,7 +20,10 @@ const {
 } = variables;
 interface IGameProps {
   pouse: boolean;
+  isFullScreen: boolean;
   togglePouse: VoidFunction;
+  updateScore: VoidFunction;
+  resetScore: VoidFunction;
 }
 
 interface IGameState {
@@ -30,15 +33,25 @@ interface IGameState {
   moveSpeed: number;
 }
 
+type StyledProps = {
+  fullScreen: boolean;
+}
+
 const GameField = styled.div`
   display: flex;
   flex-wrap: wrap;
-  width: 600px;
-  height: 600px;
+  width: ${(props: StyledProps) => props.fullScreen ? 'calc(100vh - 128px)' : '600px'};
+  height: ${(props: StyledProps) => props.fullScreen ? 'calc(100vh - 128px)' : '600px'};
+  margin: 0 auto;
   border: 2px solid rgba(255, 255, 255, .3);
   background: #222;
   position: relative;
   box-shadow: 0 0 20px 0px rgba(255, 255, 255, .3);
+
+  @media (max-width: 768px) {
+    width: 100vw;
+    height: 100vw;
+  }
 `;
 
 const initialState = {
@@ -94,7 +107,15 @@ export default class Game extends React.Component<IGameProps, IGameState> {
     }
   }
 
+  commandObserve = () => {
+    if (this.commandQueue.length > 0) {
+      const command = this.commandQueue.shift() || '';
+      this.setState({ direction: command })
+    }
+  }
+
   moveSnake = () => {
+
     const dots: Array<number[]> = Array.from(this.state.snakeDots);
     let head = dots[dots.length - 1];
     const [top, left] = head;
@@ -117,23 +138,21 @@ export default class Game extends React.Component<IGameProps, IGameState> {
     dots.push(head);
     dots.shift();
 
-    if (this.commandQueue.length > 0) {
-      const command = this.commandQueue.shift() || '';
-      this.setState({ direction: command })
-      console.log(command);
-    }
-
+    this.commandObserve();
     this.setState({ snakeDots: dots });
   };
 
   gameOver = () => {
     alert(`Game over. Snake length is ${this.state.snakeDots.length}`);
     this.setState(initialState);
+    this.props.resetScore();
   }
 
   eanlargeSnake = () => {
     const snake = [...this.state.snakeDots];
+
     snake.unshift([]);
+
     this.setState({
       snakeDots: snake
     });
@@ -154,7 +173,8 @@ export default class Game extends React.Component<IGameProps, IGameState> {
     if (headTop === foodTop && headLeft === foodLeft) {
       this.setState({
         foodCords: getRandomCoordinates()
-      })
+      });
+      this.props.updateScore();
       this.eanlargeSnake();
       this.increaseSpeed();
     }
@@ -163,7 +183,9 @@ export default class Game extends React.Component<IGameProps, IGameState> {
   checkIfCollapsed = () => {
     const snake = [...this.state.snakeDots];
     const [headTop, headLeft] = snake[snake.length - 1];
+
     snake.pop();
+
     snake.forEach((dot) => {
       const [dotTop, dotLeft] = dot;
       if (headTop === dotTop && headLeft === dotLeft) {
@@ -191,7 +213,6 @@ export default class Game extends React.Component<IGameProps, IGameState> {
   }
 
   componentDidMount = () => {
-    // this.play();
     window.addEventListener('keydown', this.handleKeyDown);
   }
 
@@ -206,8 +227,14 @@ export default class Game extends React.Component<IGameProps, IGameState> {
   }
 
   public render() {
+    if (this.props.pouse) {
+      this.pouse();
+    } else {
+      this.play();
+    }
+
     return (
-      <GameField>
+      <GameField fullScreen={this.props.isFullScreen}>
         <Snake snakeDots={this.state.snakeDots} />
         <Food dot={this.state.foodCords} />
         <Axis direction={DOWN} quantity={this.grid} />

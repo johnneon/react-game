@@ -6,10 +6,17 @@ import {
   Grid,
   Theme,
   Typography,
+  IconButton,
 } from '@material-ui/core';
+import ZoomOutMapIcon from '@material-ui/icons/ZoomOutMap';
+import {
+  FullScreenHandle
+} from "react-full-screen";
 
 interface IMenuProps {
-  open: boolean
+  open: boolean;
+  setFullScreen: FullScreenHandle;
+  isFullScreen: boolean;
 }
 
 type StyledProps = {
@@ -53,6 +60,11 @@ const Menu: React.FunctionComponent<IMenuProps> = (props) => {
           <Typography variant="h2" color="primary">
             Menu
           </Typography>
+          <IconButton
+            onClick={!props.isFullScreen ? props.setFullScreen.enter : props.setFullScreen.exit}
+          >
+            <ZoomOutMapIcon style={{ color: '#fff' }} />
+          </IconButton>
         </Grid>
       </Grid>
 

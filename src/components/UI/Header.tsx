@@ -8,13 +8,17 @@ import MenuIcon from '@material-ui/icons/Menu';
 
 interface IHeaderProps {
   toggleMenu: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  score: number;
 }
 
 const useStyles = makeStyles({
   wrapper: {
     background: '#222',
     color: 'white',
-  }
+  },
+  title: {
+    flexGrow: 1,
+  },
 });
 
 const Header: React.FunctionComponent<IHeaderProps> = (props) => {
@@ -27,8 +31,11 @@ const Header: React.FunctionComponent<IHeaderProps> = (props) => {
         <IconButton onClick={props.toggleMenu} edge="start" color="inherit" aria-label="menu">
           <MenuIcon />
         </IconButton>
-        <Typography variant="h6">
+        <Typography variant="h6" className={classes.title}>
           Snake game
+        </Typography>
+        <Typography variant="h6">
+          Score: {props.score}
         </Typography>
       </Toolbar>
 

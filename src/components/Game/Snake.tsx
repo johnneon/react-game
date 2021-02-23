@@ -16,18 +16,25 @@ interface ISnakeProps {
 type StyledProps = {
   head: boolean;
   ternPart: string;
-  opacity: number
+  opacity: number;
+  top: number;
+  left: number;
 }
 
-const SnakeDot = styled.div`
+const SnakeDot = styled.div.attrs((props: StyledProps) => ({
+  style: {
+    top: `${props.top}%`,
+    left: `${props.left}%`,
+  }
+}))`
   width: calc(2% + 1px);
   height: calc(2% + 1px);
 
   position: absolute;
   z-index: 2;
 
-  background: ${(props: StyledProps) => `rgba(255, 255, 255, ${props.opacity})`};
-  box-shadow: ${(props: StyledProps) => props.head ? '0 0 15px 3px rgba(255, 255, 255, .5)' : '0'};
+  background: ${(props: StyledProps) => `rgba(255, 255, 255, ${props.opacity});`}
+  box-shadow: ${(props: StyledProps) => props.head ? '0 0 15px 3px rgba(255, 255, 255, .5);' : '0;'}
   border-radius: ${(props: StyledProps) => {
     let radius = '0px 0px 0px 0px';
 
@@ -73,11 +80,6 @@ const Snake: React.FunctionComponent<ISnakeProps> = (props) => {
         const [nextTop, nextLeft] = props.snakeDots[i + 1] || [];
         const [prevTop, prevLeft] = props.snakeDots[i - 1] || [];
 
-        const style = {
-          top: `${top}%`,
-          left: `${left}%`
-        };
-
         let ternPart: string = rotationCalculate({
           top,
           nextTop,
@@ -91,8 +93,10 @@ const Snake: React.FunctionComponent<ISnakeProps> = (props) => {
           <SnakeDot
             ternPart={ternPart}
             opacity={opacity[i]}
-            head={i === props.snakeDots.length - 1 ? true : false}
-            style={style} key={i}
+            head={i === props.snakeDots.length - 1}
+            top={top}
+            left={left}
+            key={i}
           />
         );
       })}
