@@ -5,18 +5,18 @@ import {
   Box,
   Grid,
   Theme,
-  Typography,
-  IconButton,
 } from '@material-ui/core';
-import ZoomOutMapIcon from '@material-ui/icons/ZoomOutMap';
 import {
   FullScreenHandle
 } from "react-full-screen";
+import MenuHeader from './MenuHeader';
 
 interface IMenuProps {
   open: boolean;
   setFullScreen: FullScreenHandle;
   isFullScreen: boolean;
+  isLightTheme: boolean;
+  changeTheme: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 type StyledProps = {
@@ -34,17 +34,22 @@ const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.text.secondary,
     },
     wrapper: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    zIndex: 3, 
-    width: '100%',
-    height: '100%',
-    padding: '10px',
-    background: 'rgba(0, 0, 0, .7)',
-    transition: 'all .3s linear',
-    visibility: (props: StyledProps) => props.open ? 'visible' : 'hidden',
-    opacity: (props: StyledProps) => props.open ? 1 : 0,
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      zIndex: 3, 
+      width: '100%',
+      height: '100%',
+      padding: '10px',
+      background: 'rgba(0, 0, 0, .7)',
+      transition: 'all .3s linear',
+      visibility: (props: StyledProps) => props.open ? 'visible' : 'hidden',
+      opacity: (props: StyledProps) => props.open ? 1 : 0,
+    },
+    iconBtn: {
+      position: 'absolute',
+      top: 0,
+      right: 0
     }
   })
 );
@@ -56,16 +61,15 @@ const Menu: React.FunctionComponent<IMenuProps> = (props) => {
     <Box className={classes.wrapper}>
 
       <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <Typography variant="h2" color="primary">
-            Menu
-          </Typography>
-          <IconButton
-            onClick={!props.isFullScreen ? props.setFullScreen.enter : props.setFullScreen.exit}
-          >
-            <ZoomOutMapIcon style={{ color: '#fff' }} />
-          </IconButton>
-        </Grid>
+
+        <MenuHeader
+          open={props.open}
+          setFullScreen={props.setFullScreen}
+          isFullScreen={props.isFullScreen}
+          changeTheme={props.changeTheme}
+          isLightTheme={props.isLightTheme}
+        />
+
       </Grid>
 
     </Box>

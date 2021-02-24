@@ -9,6 +9,7 @@ import Game from './components/Game/Game';
 import Header from './components/UI/Header';
 import Footer from './components/UI/Footer';
 import Menu from './components/UI/Menu';
+import { CustomThemeProvider } from './themes/CustomThemeProvider';
 
 const useStyles = makeStyles({
   wrapper: {
@@ -31,6 +32,7 @@ function App() {
   const [open, setOpen] = useState(true);
   const [score, setScore] = useState(0);
   const [fullScreen, setFullScreen] = useState(screen.active);
+  const [isLightTheme, setIsLightTheme] = useState(false);
 
   const toggleMenu = () => {
     setOpen(!open);
@@ -44,38 +46,46 @@ function App() {
     setScore(0);
   }
 
+  const setTheme = () => {
+    setIsLightTheme(!isLightTheme);
+  }
+
   const reportChange = useCallback((fullScreen, screen) => {
       setFullScreen(screen.active);
   }, []);
 
   return (
-    <FullScreen handle={screen} onChange={reportChange}>
-      <Box className={classes.wrapper}>
+    <CustomThemeProvider isLightTheme={isLightTheme}>
+      <FullScreen handle={screen} onChange={reportChange}>
+        <Box className={classes.wrapper}>
 
-        <Header
-          toggleMenu={toggleMenu}
-          score={score}
-        />
+          <Header
+            toggleMenu={toggleMenu}
+            score={score}
+          />
 
-        <Box className={classes.gameWrap}>
-          <Game
-            pouse={open}
-            togglePouse={toggleMenu}
-            updateScore={updateScore}
-            resetScore={resetScore}
-            isFullScreen={fullScreen}
-          />
-          <Menu
-            open={open}
-            setFullScreen={screen}
-            isFullScreen={fullScreen}
-          />
+          <Box className={classes.gameWrap}>
+            <Game
+              pouse={open}
+              togglePouse={toggleMenu}
+              updateScore={updateScore}
+              resetScore={resetScore}
+              isFullScreen={fullScreen}
+            />
+            <Menu
+              open={open}
+              setFullScreen={screen}
+              isFullScreen={fullScreen}
+              changeTheme={setTheme}
+              isLightTheme={isLightTheme}
+            />
+          </Box>
+
+          <Footer />
+
         </Box>
-
-        <Footer />
-
-      </Box>
-    </FullScreen>
+      </FullScreen>
+    </CustomThemeProvider>
   );
 }
 
