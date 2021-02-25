@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { calculateOpacity, rotationCalculate } from '../../utils/utils';
-import { variables } from '../../variables';
+import { calculateOpacity } from '../../utils/utils';
 interface ISnakeProps {
   snakeDots: Array<number[]>;
   isLightTheme: boolean;

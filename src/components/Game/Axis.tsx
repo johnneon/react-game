@@ -52,7 +52,7 @@ const Line = styled.div`
 
 const Axis: React.FunctionComponent<IAxisProps> = (props) => {
   const { isLightTheme, direction } = props;
-  console.log(isLightTheme);
+  
   return (
     <>
       {props.quantity.map((el, i) => <Line isLightTheme={isLightTheme} number={i} direction={direction} key={i} />)}
