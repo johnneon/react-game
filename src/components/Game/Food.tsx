@@ -7,7 +7,7 @@ interface IFoodProps {
 
 const scale = keyframes`
   0% {
-    transform: scale(1.1);
+    transform: scale(1.2);
   }
 
   50% {
@@ -15,7 +15,7 @@ const scale = keyframes`
   }
 
   100% {
-    transform: scale(1.1);
+    transform: scale(1.2);
   }
 `;
 

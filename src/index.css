@@ -29,3 +29,15 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.fullscreen.fullscreen-enabled .game-board {
+  width: 100vw;
+  height: 100vw;
+}
+
+.fullscreen.fullscreen-enabled .app {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+}

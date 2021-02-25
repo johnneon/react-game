@@ -24,6 +24,7 @@ interface IGameProps {
   togglePouse: VoidFunction;
   updateScore: VoidFunction;
   resetScore: VoidFunction;
+  isLightTheme: boolean;
 }
 
 interface IGameState {
@@ -35,6 +36,7 @@ interface IGameState {
 
 type StyledProps = {
   fullScreen: boolean;
+  isLightTheme: boolean;
 }
 
 const GameField = styled.div`
@@ -44,7 +46,7 @@ const GameField = styled.div`
   height: ${(props: StyledProps) => props.fullScreen ? 'calc(100vh - 128px)' : '600px'};
   margin: 0 auto;
   border: 2px solid rgba(255, 255, 255, .3);
-  background: #222;
+  background: ${(props: StyledProps) => props.isLightTheme ? '#ffffff' : '#222'};
   position: relative;
   box-shadow: 0 0 20px 0px rgba(255, 255, 255, .3);
 
@@ -217,6 +219,10 @@ export default class Game extends React.Component<IGameProps, IGameState> {
   }
 
   componentWillUnmount = () => {
+    if (this.interval) {
+      clearInterval(this.interval);
+    }
+
     window.removeEventListener('keydown', this.handleKeyDown);
   }
 
@@ -227,6 +233,8 @@ export default class Game extends React.Component<IGameProps, IGameState> {
   }
 
   public render() {
+    const { isLightTheme, isFullScreen } = this.props;
+    const { snakeDots, foodCords } = this.state;
     if (this.props.pouse) {
       this.pouse();
     } else {
@@ -234,11 +242,11 @@ export default class Game extends React.Component<IGameProps, IGameState> {
     }
 
     return (
-      <GameField fullScreen={this.props.isFullScreen}>
-        <Snake snakeDots={this.state.snakeDots} />
-        <Food dot={this.state.foodCords} />
-        <Axis direction={DOWN} quantity={this.grid} />
-        <Axis direction={RIGHT} quantity={this.grid} />
+      <GameField className="game-board" isLightTheme={isLightTheme} fullScreen={isFullScreen}>
+        <Snake isLightTheme={isLightTheme} snakeDots={snakeDots} />
+        <Food dot={foodCords} />
+        <Axis isLightTheme={isLightTheme} direction={DOWN} quantity={this.grid} />
+        <Axis isLightTheme={isLightTheme} direction={RIGHT} quantity={this.grid} />
       </GameField>
     );
   }

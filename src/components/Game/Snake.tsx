@@ -11,6 +11,7 @@ const {
 } = variables;
 interface ISnakeProps {
   snakeDots: Array<number[]>;
+  isLightTheme: boolean;
 }
 
 type StyledProps = {
@@ -19,6 +20,7 @@ type StyledProps = {
   opacity: number;
   top: number;
   left: number;
+  isLightTheme: boolean;
 }
 
 const SnakeDot = styled.div.attrs((props: StyledProps) => ({
@@ -32,9 +34,10 @@ const SnakeDot = styled.div.attrs((props: StyledProps) => ({
 
   position: absolute;
   z-index: 2;
-
-  background: ${(props: StyledProps) => `rgba(255, 255, 255, ${props.opacity});`}
-  box-shadow: ${(props: StyledProps) => props.head ? '0 0 15px 3px rgba(255, 255, 255, .5);' : '0;'}
+  
+  
+  background: ${(props: StyledProps) => `rgba(${props.isLightTheme ? '0, 0, 0,' : '255, 255, 255,'} ${props.opacity});`}
+  box-shadow: ${(props: StyledProps) => props.head ? `0 0 15px 3px rgba(${props.isLightTheme ? '0, 0, 0,' : '255, 255, 255,'} .5);` : '0;'}
   border-radius: ${(props: StyledProps) => {
     let radius = '0px 0px 0px 0px';
 
@@ -96,6 +99,7 @@ const Snake: React.FunctionComponent<ISnakeProps> = (props) => {
             head={i === props.snakeDots.length - 1}
             top={top}
             left={left}
+            isLightTheme={props.isLightTheme}
             key={i}
           />
         );

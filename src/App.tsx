@@ -57,7 +57,7 @@ function App() {
   return (
     <CustomThemeProvider isLightTheme={isLightTheme}>
       <FullScreen handle={screen} onChange={reportChange}>
-        <Box className={classes.wrapper}>
+        <Box className={`${classes.wrapper} app`}>
 
           <Header
             toggleMenu={toggleMenu}
@@ -71,6 +71,7 @@ function App() {
               updateScore={updateScore}
               resetScore={resetScore}
               isFullScreen={fullScreen}
+              isLightTheme={isLightTheme}
             />
             <Menu
               open={open}
