@@ -68,7 +68,7 @@ export const calculateOpacity = (num: Array<number[]>): number[] => {
   const result = num
     .map((el, ind) => {
       const result = (hundredPercent - (procient * ind / divider)) / hundredPercent;
-      return result;
+      return +result.toFixed(2);
     })
     .reverse();
 
