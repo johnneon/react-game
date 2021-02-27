@@ -6,7 +6,8 @@ import {
   Grid,
   Theme,
 } from '@material-ui/core';
-import GeneralMenu from './GeneralMenu';
+import MenuHeader from './MenuHeader';
+import SoundControls from './SoundControls';
 import { useGameContext } from '../../context/GameContext';
 
 interface IMenuProps {
@@ -18,6 +19,14 @@ type StyledProps = {
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    root: {
+      flexGrow: 1,
+    },
+    paper: {
+      padding: theme.spacing(2),
+      textAlign: 'center',
+      color: theme.palette.text.secondary,
+    },
     wrapper: {
       position: 'absolute',
       top: 0,
@@ -30,6 +39,11 @@ const useStyles = makeStyles((theme: Theme) =>
       transition: 'all .3s linear',
       visibility: (props: StyledProps) => props.open ? 'visible' : 'hidden',
       opacity: (props: StyledProps) => props.open ? 1 : 0,
+    },
+    iconBtn: {
+      position: 'absolute',
+      top: 0,
+      right: 0
     }
   })
 );
@@ -43,7 +57,17 @@ const Menu: React.FunctionComponent<IMenuProps> = (props) => {
 
       <Grid container spacing={3}>
 
-        <GeneralMenu />
+        <MenuHeader>
+          Sound settings
+        </MenuHeader>
+
+        <SoundControls>
+          Musik
+        </SoundControls>
+
+        <SoundControls>
+          Game
+        </SoundControls>
 
       </Grid>
 

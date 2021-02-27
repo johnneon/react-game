@@ -10,6 +10,7 @@ import Header from './components/UI/Header';
 import Footer from './components/UI/Footer';
 import Menu from './components/UI/Menu';
 import { CustomThemeProvider } from './themes/CustomThemeProvider';
+import { GameContext } from './context/GameContext';
 
 const useStyles = makeStyles({
   wrapper: {
@@ -50,12 +51,19 @@ function App() {
     setIsLightTheme(!isLightTheme);
   }
 
-  const reportChange = useCallback((fullScreen, screen) => {
+  const reportChange = useCallback((fullScreen: boolean, screen: FullScreenHandle) => {
       setFullScreen(screen.active);
   }, []);
 
   return (
     <CustomThemeProvider isLightTheme={isLightTheme}>
+      <GameContext.Provider value={{
+        open: open,
+        isFullScreen: fullScreen,
+        setFullScreen: screen,
+        changeTheme: setTheme,
+        isLightTheme,
+      }}>
       <FullScreen handle={screen} onChange={reportChange}>
         <Box className={`${classes.wrapper} app`}>
 
@@ -73,19 +81,14 @@ function App() {
               isFullScreen={fullScreen}
               isLightTheme={isLightTheme}
             />
-            <Menu
-              open={open}
-              setFullScreen={screen}
-              isFullScreen={fullScreen}
-              changeTheme={setTheme}
-              isLightTheme={isLightTheme}
-            />
+            <Menu />
           </Box>
 
           <Footer />
 
         </Box>
       </FullScreen>
+      </GameContext.Provider>
     </CustomThemeProvider>
   );
 }

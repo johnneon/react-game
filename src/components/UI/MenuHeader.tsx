@@ -7,20 +7,13 @@ import {
   Typography,
   IconButton,
 } from '@material-ui/core';
-import {
-  FullScreenHandle
-} from "react-full-screen";
 import FullscreenIcon from '@material-ui/icons/Fullscreen';
 import FullscreenExitIcon from '@material-ui/icons/FullscreenExit';
 import Brightness5Icon from '@material-ui/icons/Brightness5';
 import Brightness7Icon from '@material-ui/icons/Brightness7';
+import { useGameContext } from '../../context/GameContext';
 
 interface IMenuHeaderProps {
-  open: boolean;
-  setFullScreen: FullScreenHandle;
-  isFullScreen: boolean;
-  isLightTheme: boolean;
-  changeTheme: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -37,7 +30,8 @@ const useStyles = makeStyles((theme: Theme) =>
       top: 0,
       right: '48px'
     },
-    text: {
+    title: {
+      paddingTop: 15,
       color: theme.palette.primary.contrastText
     }
   })
@@ -45,28 +39,34 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const MenuHeader: React.FunctionComponent<IMenuHeaderProps> = (props) => {
   const classes = useStyles();
-
+  const {
+    isFullScreen,
+    setFullScreen,
+    changeTheme,
+    isLightTheme,
+  } = useGameContext();
+  
   return (
     <Grid item xs={12}>
 
-      <Typography variant="h1" align="center" component="h2" className={classes.text}>
-        Menu
+      <Typography variant="h1" align="center" component="h2" className={classes.title}>
+        {props.children}
       </Typography>
 
       <IconButton
-        onClick={!props.isFullScreen ? props.setFullScreen.enter : props.setFullScreen.exit}
+        onClick={!isFullScreen ? setFullScreen?.enter : setFullScreen?.exit}
         className={classes.fullScreenBtn}
       >
-        {!props.isFullScreen
+        {!isFullScreen
         ? <FullscreenIcon />
         : <FullscreenExitIcon />}
       </IconButton>
 
       <IconButton
-        onClick={props.changeTheme}
+        onClick={changeTheme}
         className={classes.themeBtn}
       >
-        {!props.isLightTheme
+        {!isLightTheme
         ? <Brightness5Icon />
         : <Brightness7Icon />}
       </IconButton>

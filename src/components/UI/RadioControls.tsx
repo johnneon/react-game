@@ -69,8 +69,8 @@ const RadioControls: React.FunctionComponent<IRadioControlsProps> = (props) => {
         
         <RadioGroup row value={value} onChange={handleChange}>
 
-          {props.controls.map((control) => {
-            return <Checkbox value={control.value} label={control.label} />;
+          {props.controls.map((control, i) => {
+            return <Checkbox key={i} value={control.value} label={control.label} />;
           })}
 
         </RadioGroup>
