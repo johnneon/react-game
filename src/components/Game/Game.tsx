@@ -5,6 +5,7 @@ import Food from './Food';
 import { getRandomCoordinates } from '../../utils/utils';
 import { variables } from '../../variables';
 import Axis from './Axis';
+import { GameContext } from '../../context/GameContext';
 
 const {
   UP,
@@ -19,12 +20,9 @@ const {
   STEP
 } = variables;
 interface IGameProps {
-  pouse: boolean;
-  isFullScreen: boolean;
   togglePouse: VoidFunction;
   updateScore: VoidFunction;
   resetScore: VoidFunction;
-  isLightTheme: boolean;
 }
 
 interface IGameState {
@@ -84,6 +82,9 @@ export default class Game extends React.Component<IGameProps, IGameState> {
     this.moveSnake = this.moveSnake.bind(this);
     this.grid = new Array(50).fill(null);
   }
+
+  static contextType = GameContext;
+
   handleKeyDown = (event: KeyboardEvent) => {
     const { code } = event;
     const { direction } = this.state;
@@ -233,9 +234,9 @@ export default class Game extends React.Component<IGameProps, IGameState> {
   }
 
   public render() {
-    const { isLightTheme, isFullScreen } = this.props;
+    const { isLightTheme, isFullScreen, pouse } = this.context;
     const { snakeDots, foodCords } = this.state;
-    if (this.props.pouse) {
+    if (pouse) {
       this.pouse();
     } else {
       this.play();

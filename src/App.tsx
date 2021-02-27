@@ -30,10 +30,10 @@ const useStyles = makeStyles({
 function App() {
   const classes = useStyles();
   const screen: FullScreenHandle = useFullScreenHandle();
-  const [open, setOpen] = useState(true);
-  const [score, setScore] = useState(0);
-  const [fullScreen, setFullScreen] = useState(screen.active);
-  const [isLightTheme, setIsLightTheme] = useState(false);
+  const [open, setOpen] = useState<boolean>(true);
+  const [score, setScore] = useState<number>(0);
+  const [fullScreen, setFullScreen] = useState<boolean>(screen.active);
+  const [isLightTheme, setIsLightTheme] = useState<boolean>(false);
 
   const toggleMenu = () => {
     setOpen(!open);
@@ -58,7 +58,8 @@ function App() {
   return (
     <CustomThemeProvider isLightTheme={isLightTheme}>
       <GameContext.Provider value={{
-        open: open,
+        pouse: open,
+        toggleMenu: toggleMenu,
         isFullScreen: fullScreen,
         setFullScreen: screen,
         changeTheme: setTheme,
@@ -74,12 +75,9 @@ function App() {
 
           <Box className={classes.gameWrap}>
             <Game
-              pouse={open}
               togglePouse={toggleMenu}
               updateScore={updateScore}
               resetScore={resetScore}
-              isFullScreen={fullScreen}
-              isLightTheme={isLightTheme}
             />
             <Menu />
           </Box>

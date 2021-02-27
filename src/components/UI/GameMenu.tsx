@@ -5,62 +5,40 @@ import {
   Box,
   Grid,
   Theme,
-  Tooltip
+  Tooltip,
+  Button
 } from '@material-ui/core';
-import {
-  FullScreenHandle
-} from "react-full-screen";
 import MenuHeader from './MenuHeader';
 import RadioControls from './RadioControls';
 import HelpIcon from '@material-ui/icons/Help';
 import { useGameContext } from '../../context/GameContext';
+import { variables } from '../../variables';
 
-interface IMenuProps {
-  open: boolean;
-  setFullScreen: FullScreenHandle;
-  isFullScreen: boolean;
-  isLightTheme: boolean;
-  changeTheme: (event: React.MouseEvent<HTMLButtonElement>) => void;
-}
+const {
+  GAME_SETTINGS_INFO,
+  EASY_MODE,
+  NORMAL_MODE,
+  HARD_MODE,
+  DEFAULT_SNAKE,
+  COLORED_SNAKE
+} = variables;
 
-type StyledProps = {
-  open: boolean;
+interface IGameMenuProps {
+  goBack: () => void;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
-      flexGrow: 1,
-    },
-    paper: {
-      padding: theme.spacing(2),
-      textAlign: 'center',
-      color: theme.palette.text.secondary,
-    },
-    wrapper: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      zIndex: 3, 
-      width: '100%',
-      height: '100%',
-      padding: '10px',
-      background: theme.palette.secondary.main,
-      transition: 'all .3s linear',
-      visibility: (props: StyledProps) => props.open ? 'visible' : 'hidden',
-      opacity: (props: StyledProps) => props.open ? 1 : 0,
-    },
-    iconBtn: {
-      position: 'absolute',
-      top: 0,
-      right: 0
+    btn: {
+      color: theme.palette.primary.contrastText,
+      margin: '0 auto 10px'
     }
   })
 );
 
-const Menu: React.FunctionComponent<IMenuProps> = (props) => {
-  const { open } = useGameContext();
-  const classes = useStyles({ open });
+const GameMenu: React.FunctionComponent<IGameMenuProps> = (props) => {
+  const { pouse } = useGameContext();
+  const classes = useStyles({ pouse });
   const [gameMode, setGameMode] = useState<string>('easy');
   const [colorMode, setColorMode] = useState<string>('easy');
 
@@ -73,19 +51,18 @@ const Menu: React.FunctionComponent<IMenuProps> = (props) => {
   }
 
   const gameControls = [
-    { value: "easy", label: "Easy" },
-    { value: "normal", label: "Normal" },
-    { value: "hard", label: "Hard" }
+    { value: EASY_MODE, label: "Easy" },
+    { value: NORMAL_MODE, label: "Normal" },
+    { value: HARD_MODE, label: "Hard" }
   ];
   const colorControls = [
-    { value: "default", label: "Default" },
-    { value: "colored", label: "Colored snake" }
+    { value: DEFAULT_SNAKE, label: "Default" },
+    { value: COLORED_SNAKE, label: "Colored snake" }
   ];
-  const text = 'Easy: Open borders, speed doesn`t increase. Normal: Close borders, increasing speed. Hard: Close borders, increasing speed, enemy items. After you WARNING!!! After changing the mode, the game will restart!';
-
+  const text = GAME_SETTINGS_INFO;
 
   return (
-    <Box className={classes.wrapper}>
+    <Box>
 
       <Grid container spacing={3}>
 
@@ -102,10 +79,19 @@ const Menu: React.FunctionComponent<IMenuProps> = (props) => {
           Color mode
         </RadioControls>
 
+        <Button
+            variant="outlined"
+            color="inherit"
+            className={classes.btn}
+            onClick={props.goBack}
+        >
+          Back
+        </Button>
+
       </Grid>
 
     </Box>
   );
 };
 
-export default Menu;
+export default GameMenu;

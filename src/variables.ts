@@ -8,5 +8,15 @@ export const variables = {
   KEY_S: 'KeyS',
   KEY_D: 'KeyD',
   KEY_ESCAPE: 'Escape',
-  STEP: 2
+  STEP: 2,
+  GAME_SETTINGS_INFO: 'Easy: Open borders, speed doesn`t increase. Normal: Close borders, increasing speed. Hard: Close borders, increasing speed, enemy items. After you WARNING!!! After changing the mode, the game will restart!',
+  EASY_MODE: "easy",
+  NORMAL_MODE: "normal",
+  HARD_MODE: "hard",
+  DEFAULT_SNAKE: "default",
+  COLORED_SNAKE: "colored",
+  GENERAL: 'general',
+  GAME_SETTINGS: 'game',
+  SOUND_SETTINGS: 'sound',
+  SCORE: 'score'
 };

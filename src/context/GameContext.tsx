@@ -1,21 +1,23 @@
 import { createContext, useContext } from 'react';
 
 export type IGameContent = {
-  open: boolean,
+  pouse: boolean,
   isLightTheme: boolean | null,
   isFullScreen: boolean | null,
   setFullScreen: any,
   changeTheme: () => void,
+  toggleMenu: () => void,
 }
 
 function noop() {}
 
 export const GameContext = createContext<IGameContent>({
-  open: true,
+  pouse: true,
   isLightTheme: null,
   isFullScreen: null,
   setFullScreen: noop,
   changeTheme: noop,
+  toggleMenu: noop
 });
 
 export const useGameContext = () => useContext(GameContext)

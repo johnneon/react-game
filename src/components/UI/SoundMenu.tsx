@@ -5,55 +5,31 @@ import {
   Box,
   Grid,
   Theme,
+  Button
 } from '@material-ui/core';
 import MenuHeader from './MenuHeader';
 import SoundControls from './SoundControls';
 import { useGameContext } from '../../context/GameContext';
 
-interface IMenuProps {
-}
-
-type StyledProps = {
-  open: boolean;
+interface ISoundMenuProps {
+  goBack: () => void;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
-      flexGrow: 1,
-    },
-    paper: {
-      padding: theme.spacing(2),
-      textAlign: 'center',
-      color: theme.palette.text.secondary,
-    },
-    wrapper: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      zIndex: 3, 
-      width: '100%',
-      height: '100%',
-      padding: '10px',
-      background: theme.palette.secondary.main,
-      transition: 'all .3s linear',
-      visibility: (props: StyledProps) => props.open ? 'visible' : 'hidden',
-      opacity: (props: StyledProps) => props.open ? 1 : 0,
-    },
-    iconBtn: {
-      position: 'absolute',
-      top: 0,
-      right: 0
+    btn: {
+      color: theme.palette.primary.contrastText,
+      margin: '0 auto 10px'
     }
   })
 );
 
-const Menu: React.FunctionComponent<IMenuProps> = (props) => {
-  const { open } = useGameContext();
-  const classes = useStyles({ open });
+const SoundMenu: React.FunctionComponent<ISoundMenuProps> = (props) => {
+  const { pouse } = useGameContext();
+  const classes = useStyles({ pouse });
 
   return (
-    <Box className={classes.wrapper}>
+    <Box>
 
       <Grid container spacing={3}>
 
@@ -61,13 +37,16 @@ const Menu: React.FunctionComponent<IMenuProps> = (props) => {
           Sound settings
         </MenuHeader>
 
-        <SoundControls>
-          Musik
-        </SoundControls>
+        <SoundControls />
 
-        <SoundControls>
-          Game
-        </SoundControls>
+        <Button
+            variant="outlined"
+            color="inherit"
+            className={classes.btn}
+            onClick={props.goBack}
+        >
+          Back
+        </Button>
 
       </Grid>
 
@@ -75,4 +54,4 @@ const Menu: React.FunctionComponent<IMenuProps> = (props) => {
   );
 };
 
-export default Menu;
+export default SoundMenu;
