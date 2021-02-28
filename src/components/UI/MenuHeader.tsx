@@ -11,6 +11,8 @@ import FullscreenIcon from '@material-ui/icons/Fullscreen';
 import FullscreenExitIcon from '@material-ui/icons/FullscreenExit';
 import Brightness5Icon from '@material-ui/icons/Brightness5';
 import Brightness7Icon from '@material-ui/icons/Brightness7';
+import VolumeUpIcon from '@material-ui/icons/VolumeUp';
+import VolumeOffIcon from '@material-ui/icons/VolumeOff';
 import { useGameContext } from '../../context/GameContext';
 
 interface IMenuHeaderProps {
@@ -30,6 +32,12 @@ const useStyles = makeStyles((theme: Theme) =>
       top: 0,
       right: '48px'
     },
+    soundBtn: {
+      color: theme.palette.primary.contrastText,
+      position: 'absolute',
+      top: 0,
+      right: '96px'
+    },
     title: {
       paddingTop: 15,
       color: theme.palette.primary.contrastText
@@ -44,7 +52,11 @@ const MenuHeader: React.FunctionComponent<IMenuHeaderProps> = (props) => {
     setFullScreen,
     changeTheme,
     isLightTheme,
+    musik
   } = useGameContext();
+  const { play, pause, isPlaying } = musik;
+
+  // ! Ты остановился на том что бы выключать музыку, и подумай как ее лучше протягивать через приложении, а то щас как то гавно
   
   return (
     <Grid item xs={12}>
@@ -60,6 +72,15 @@ const MenuHeader: React.FunctionComponent<IMenuHeaderProps> = (props) => {
         {!isFullScreen
         ? <FullscreenIcon />
         : <FullscreenExitIcon />}
+      </IconButton>
+
+      <IconButton
+        onClick={!isPlaying ? play : pause}
+        className={classes.soundBtn}
+      >
+        {!isPlaying
+        ? <VolumeOffIcon />
+        : <VolumeUpIcon />}
       </IconButton>
 
       <IconButton

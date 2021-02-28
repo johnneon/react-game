@@ -3,11 +3,14 @@ import {
   Grid,
 } from '@material-ui/core';
 import SliderControl from './SliderControl';
+import { useGameContext } from '../../context/GameContext';
 
 interface ISoundControlsProps {
 }
 
 const SoundControls: React.FunctionComponent<ISoundControlsProps> = (props) => {
+  const { musik } = useGameContext();
+
   return (
     <Grid
       container
@@ -17,7 +20,7 @@ const SoundControls: React.FunctionComponent<ISoundControlsProps> = (props) => {
       item xs={12}
     >
       
-      <SliderControl>
+      <SliderControl setVolume={musik.setVolume}>
         Music
       </SliderControl>
 

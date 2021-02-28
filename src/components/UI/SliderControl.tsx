@@ -12,6 +12,7 @@ import VolumeDown from '@material-ui/icons/VolumeDown';
 import VolumeUp from '@material-ui/icons/VolumeUp';
 
 interface ISliderControlProps {
+  setVolume?: (volume: number) => void;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -44,10 +45,15 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const SliderControl: React.FunctionComponent<ISliderControlProps> = (props) => {
   const classes = useStyles();
-  const [value, setValue] = useState<number>(100);
+  const [value, setValue] = useState<number>(50);
+  const percent = 100;
 
   const handleChange = (event: React.ChangeEvent<{}>, value: number | number[]) => {
     setValue(value as number);
+
+    if (props.setVolume) {
+      props.setVolume(value as number / percent);
+    }
   };
 
   return (

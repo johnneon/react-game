@@ -4,9 +4,10 @@ export type IGameContent = {
   pouse: boolean,
   isLightTheme: boolean | null,
   isFullScreen: boolean | null,
-  setFullScreen: any,
   endGame: boolean | null;
   score: number;
+  setFullScreen: any,
+  musik: any;
   toggleMenu: () => void,
   changeTheme: () => void,
   resetGame: () => void,
@@ -23,7 +24,8 @@ export const GameContext = createContext<IGameContent>({
   setFullScreen: noop,
   changeTheme: noop,
   toggleMenu: noop,
-  resetGame: noop
+  resetGame: noop,
+  musik: noop
 });
 
 export const useGameContext = () => useContext(GameContext)

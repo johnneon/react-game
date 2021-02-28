@@ -11,6 +11,7 @@ import Footer from './components/UI/Footer';
 import Menu from './components/UI/Menu';
 import { CustomThemeProvider } from './themes/CustomThemeProvider';
 import { GameContext } from './context/GameContext';
+import { IuseSoundControl, useSoundControl } from './hooks/sound.hook';
 
 const useStyles = makeStyles({
   wrapper: {
@@ -34,9 +35,11 @@ function App() {
   const [score, setScore] = useState<number>(0);
   const [fullScreen, setFullScreen] = useState<boolean>(screen.active);
   const [isLightTheme, setIsLightTheme] = useState<boolean>(false);
-  const [endGame, setEndGame] = useState<boolean>(true);
-
+  const [endGame, setEndGame] = useState<boolean>(false);
+  const musik: IuseSoundControl = useSoundControl('./audio/musik.mp3');
+  
   const toggleMenu = () => {
+    musik.play();
     setOpen(!open);
   };
 
@@ -73,10 +76,12 @@ function App() {
         isLightTheme,
         endGame,
         score,
-        resetGame
+        resetGame,
+        musik
       }}>
       <FullScreen handle={screen} onChange={reportChange}>
         <Box className={`${classes.wrapper} app`}>
+          {/* <button onClick={play}>play</button> */}
 
           <Header
             toggleMenu={toggleMenu}
