@@ -12,6 +12,7 @@ import SoundMenu from './SoundMenu';
 import ScoreTable from './ScoreTable';
 import { useGameContext } from '../../context/GameContext';
 import { variables } from '../../variables';
+import GameOverScreen from './GameOverScreen';
 
 const {
   GENERAL,
@@ -49,7 +50,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const Menu: React.FunctionComponent<IMenuProps> = (props) => {
-  const { pouse } = useGameContext();
+  const { pouse, endGame } = useGameContext();
   const classes = useStyles({ pouse });
   const [menu, setMenu] = useState<string>(GENERAL);
 
@@ -90,8 +91,8 @@ const Menu: React.FunctionComponent<IMenuProps> = (props) => {
         justify="center"
       >
 
-        {provider(menu)}
-
+        {endGame ? <GameOverScreen /> : provider(menu)}
+        
       </Grid>
 
     </Box>

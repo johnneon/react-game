@@ -13,7 +13,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: url(./background.jpg) center no-repeat;
+  background: url(./images/background.jpg) center no-repeat;
   background-size: cover;
 }
 

@@ -34,17 +34,24 @@ function App() {
   const [score, setScore] = useState<number>(0);
   const [fullScreen, setFullScreen] = useState<boolean>(screen.active);
   const [isLightTheme, setIsLightTheme] = useState<boolean>(false);
+  const [endGame, setEndGame] = useState<boolean>(true);
 
   const toggleMenu = () => {
     setOpen(!open);
   };
 
+  const gameOver = () => {
+    console.log(score);
+    setOpen(!open);
+    setEndGame(!endGame);
+  }
+
   const updateScore = () => {
     setScore(score + 1);
   }
 
-  const resetScore = () => {
-    setScore(0);
+  const resetGame = () => {
+    setEndGame(!endGame);
   }
 
   const setTheme = () => {
@@ -64,6 +71,9 @@ function App() {
         setFullScreen: screen,
         changeTheme: setTheme,
         isLightTheme,
+        endGame,
+        score,
+        resetGame
       }}>
       <FullScreen handle={screen} onChange={reportChange}>
         <Box className={`${classes.wrapper} app`}>
@@ -77,7 +87,7 @@ function App() {
             <Game
               togglePouse={toggleMenu}
               updateScore={updateScore}
-              resetScore={resetScore}
+              gameOver={gameOver}
             />
             <Menu />
           </Box>

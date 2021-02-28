@@ -22,7 +22,7 @@ const {
 interface IGameProps {
   togglePouse: VoidFunction;
   updateScore: VoidFunction;
-  resetScore: VoidFunction;
+  gameOver: VoidFunction;
 }
 
 interface IGameState {
@@ -54,27 +54,33 @@ const GameField = styled.div`
   }
 `;
 
-const initialState = {
-  foodCords: getRandomCoordinates(),
-  direction: UP,
-  moveSpeed: 100,
-  snakeDots: [
-    [52,48],
-    [50, 48],
-    [48, 48],
-  ]
-};
-
 export default class Game extends React.Component<IGameProps, IGameState> {
   interval: number;
   isStoped: boolean;
   commandQueue: string[];
   grid: null[];
+  initialState: {
+    foodCords: number[];
+    direction: string;
+    snakeDots: Array<number[]>;
+    moveSpeed: number;
+  }
 
   constructor(props: IGameProps | Readonly<IGameProps>) {
     super(props);
 
-    this.state  = initialState;
+    this.initialState = {
+      foodCords: getRandomCoordinates(),
+      direction: UP,
+      moveSpeed: 100,
+      snakeDots: [
+        [52,48],
+        [50, 48],
+        [48, 48],
+      ]
+    };
+
+    this.state  = this.initialState;
 
     this.interval = 0;
     this.isStoped = false;
@@ -146,9 +152,8 @@ export default class Game extends React.Component<IGameProps, IGameState> {
   };
 
   gameOver = () => {
-    alert(`Game over. Snake length is ${this.state.snakeDots.length}`);
-    this.setState(initialState);
-    this.props.resetScore();
+    this.setState(this.initialState);
+    this.props.gameOver();
   }
 
   eanlargeSnake = () => {

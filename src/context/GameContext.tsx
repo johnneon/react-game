@@ -5,19 +5,25 @@ export type IGameContent = {
   isLightTheme: boolean | null,
   isFullScreen: boolean | null,
   setFullScreen: any,
-  changeTheme: () => void,
+  endGame: boolean | null;
+  score: number;
   toggleMenu: () => void,
+  changeTheme: () => void,
+  resetGame: () => void,
 }
 
 function noop() {}
 
 export const GameContext = createContext<IGameContent>({
+  score: 0,
   pouse: true,
   isLightTheme: null,
   isFullScreen: null,
+  endGame: null,
   setFullScreen: noop,
   changeTheme: noop,
-  toggleMenu: noop
+  toggleMenu: noop,
+  resetGame: noop
 });
 
 export const useGameContext = () => useContext(GameContext)

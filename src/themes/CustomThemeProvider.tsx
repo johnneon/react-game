@@ -1,12 +1,6 @@
 import React from 'react';
 import { unstable_createMuiStrictModeTheme as createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
-declare module '@material-ui/core/styles/createMuiTheme' {
-  interface ThemeOptions {    
-    root?: string  // optional
-  }
-}
-
 const dark = createMuiTheme({
   palette: {
     common: {

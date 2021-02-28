@@ -87,7 +87,7 @@ const ScoreTable: React.FunctionComponent<IScoreTableProps> = (props) => {
                   </TableCell>
                 </TableRow>
               ))}
-              {/* {normal.map((row: IScoreItem, i) => (
+              {normal.map((row: IScoreItem, i) => (
                 <TableRow key={i}>
                   <TableCell component="th" scope="row">
                   {row.name} - {row.score}
@@ -100,7 +100,7 @@ const ScoreTable: React.FunctionComponent<IScoreTableProps> = (props) => {
                   {row.name} - {row.score}
                   </TableCell>
                 </TableRow>
-              ))} */}
+              ))}
 
             </TableBody>
           </Table>
