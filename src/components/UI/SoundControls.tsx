@@ -9,7 +9,12 @@ interface ISoundControlsProps {
 }
 
 const SoundControls: React.FunctionComponent<ISoundControlsProps> = (props) => {
-  const { musik } = useGameContext();
+  const { musik, eatSoundEffect, endSoundEffect } = useGameContext();
+  
+  const setEffectsVolume = (volume: number) => {
+    eatSoundEffect.setVolume(volume);
+    endSoundEffect.setVolume(volume);
+  }
 
   return (
     <Grid
@@ -20,11 +25,11 @@ const SoundControls: React.FunctionComponent<ISoundControlsProps> = (props) => {
       item xs={12}
     >
       
-      <SliderControl setVolume={musik.setVolume}>
+      <SliderControl volume={musik.volume} setVolume={musik.setVolume}>
         Music
       </SliderControl>
 
-      <SliderControl>
+      <SliderControl volume={eatSoundEffect.volume} setVolume={setEffectsVolume}>
         Game effects
       </SliderControl>
 

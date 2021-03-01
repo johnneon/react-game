@@ -52,12 +52,10 @@ const MenuHeader: React.FunctionComponent<IMenuHeaderProps> = (props) => {
     setFullScreen,
     changeTheme,
     isLightTheme,
-    musik
+    sound,
+    setSound
   } = useGameContext();
-  const { play, pause, isPlaying } = musik;
 
-  // ! Ты остановился на том что бы выключать музыку, и подумай как ее лучше протягивать через приложении, а то щас как то гавно
-  
   return (
     <Grid item xs={12}>
 
@@ -75,10 +73,10 @@ const MenuHeader: React.FunctionComponent<IMenuHeaderProps> = (props) => {
       </IconButton>
 
       <IconButton
-        onClick={!isPlaying ? play : pause}
+        onClick={setSound}
         className={classes.soundBtn}
       >
-        {!isPlaying
+        {!sound
         ? <VolumeOffIcon />
         : <VolumeUpIcon />}
       </IconButton>

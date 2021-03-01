@@ -36,25 +36,41 @@ function App() {
   const [fullScreen, setFullScreen] = useState<boolean>(screen.active);
   const [isLightTheme, setIsLightTheme] = useState<boolean>(false);
   const [endGame, setEndGame] = useState<boolean>(false);
-  const musik: IuseSoundControl = useSoundControl('./audio/musik.mp3');
+  const [sound, setSound] = useState<boolean>(true);
+  const musik: IuseSoundControl = useSoundControl('./audio/musik.mp3', true);
+  const eatSoundEffect: IuseSoundControl = useSoundControl('./audio/eat.mp3');
+  const endSoundEffect: IuseSoundControl = useSoundControl('./audio/lose.mp3');
   
   const toggleMenu = () => {
-    musik.play();
     setOpen(!open);
+
+    if (open && sound) {
+      musik.play();
+    } else {
+      musik.pause();
+    }
   };
 
   const gameOver = () => {
     console.log(score);
+    if (sound) {
+      musik.stop();
+      endSoundEffect.play();
+    }
     setOpen(!open);
     setEndGame(!endGame);
   }
 
   const updateScore = () => {
+    if (sound) {
+      eatSoundEffect.play();
+    }
     setScore(score + 1);
   }
 
   const resetGame = () => {
     setEndGame(!endGame);
+    setScore(0);
   }
 
   const setTheme = () => {
@@ -64,6 +80,10 @@ function App() {
   const reportChange = useCallback((fullScreen: boolean, screen: FullScreenHandle) => {
       setFullScreen(screen.active);
   }, []);
+
+  const toggleSound = () => {
+    setSound(!sound);
+  }
 
   return (
     <CustomThemeProvider isLightTheme={isLightTheme}>
@@ -77,7 +97,11 @@ function App() {
         endGame,
         score,
         resetGame,
-        musik
+        musik,
+        eatSoundEffect,
+        endSoundEffect,
+        setSound: toggleSound,
+        sound
       }}>
       <FullScreen handle={screen} onChange={reportChange}>
         <Box className={`${classes.wrapper} app`}>

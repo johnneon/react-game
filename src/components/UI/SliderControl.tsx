@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Grid,
   Slider,
@@ -12,7 +12,8 @@ import VolumeDown from '@material-ui/icons/VolumeDown';
 import VolumeUp from '@material-ui/icons/VolumeUp';
 
 interface ISliderControlProps {
-  setVolume?: (volume: number) => void;
+  volume: number;
+  setVolume: (volume: number) => void;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -45,15 +46,10 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const SliderControl: React.FunctionComponent<ISliderControlProps> = (props) => {
   const classes = useStyles();
-  const [value, setValue] = useState<number>(50);
   const percent = 100;
 
   const handleChange = (event: React.ChangeEvent<{}>, value: number | number[]) => {
-    setValue(value as number);
-
-    if (props.setVolume) {
-      props.setVolume(value as number / percent);
-    }
+    props.setVolume(value as number / percent);
   };
 
   return (
@@ -74,7 +70,7 @@ const SliderControl: React.FunctionComponent<ISliderControlProps> = (props) => {
       </Grid>
       <Grid item xs>
         <Slider
-          value={value}
+          value={props.volume * percent}
           onChange={handleChange}
           classes={{
             root: classes.root,
