@@ -7,6 +7,7 @@ import { getRandomCoordinates, randomColor } from '../../utils/utils';
 import { variables } from '../../variables';
 import Axis from './Axis';
 import { GameContext } from '../../context/GameContext';
+import { getGameState, saveGameState } from '../../utils/save';
 
 const {
   UP,
@@ -21,7 +22,8 @@ const {
   STEP,
   EASY_MODE,
   HARD_MODE,
-  DEFAULT_SNAKE
+  DEFAULT_SNAKE,
+  GAME_STATE
 } = variables;
 interface IGameProps {
   togglePouse: VoidFunction;
@@ -295,6 +297,17 @@ export default class Game extends React.Component<IGameProps, IGameState> {
 
   componentDidMount = () => {
     window.addEventListener('keydown', this.handleKeyDown);
+
+    try {
+      const savedState = getGameState(GAME_STATE);
+      if (savedState) {
+        this.setState({
+          ...savedState
+        });
+      }
+    } catch (e) {
+      return;
+    }
   }
 
   componentWillUnmount = () => {
@@ -306,9 +319,10 @@ export default class Game extends React.Component<IGameProps, IGameState> {
   }
 
   componentDidUpdate = (prevProps: IGameProps) => {
-    if (prevProps.mode !== this.props.mode) {
-      this.reset();
-    }
+    // if (prevProps.mode !== this.props.mode) {
+    //   console.log(123);
+    //   this.reset();
+    // }
     const { mode } = this.props;
     this.checkIfCollapsed();
     this.checkIfEat();
@@ -318,6 +332,7 @@ export default class Game extends React.Component<IGameProps, IGameState> {
     if (mode === HARD_MODE) {
       this.checkIfEatStone();
     }
+    saveGameState(this.state, GAME_STATE);
   }
 
   createStones = () => {

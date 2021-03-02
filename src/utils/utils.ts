@@ -83,7 +83,11 @@ export const randomColor = (): string => {
     '3, 169, 244',
     '0, 188, 212',
     '118, 255, 3',
-    '255, 235, 59'
+    '255, 235, 59',
+    '96, 125, 139',
+    '0, 229, 255',
+    '255, 109, 0',
+    '255, 64, 129'
   ];
 
   return colors[Math.floor((Math.random()*colors.length))];

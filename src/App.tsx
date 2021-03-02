@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import {
   FullScreen,
   useFullScreenHandle,
@@ -13,8 +13,9 @@ import { CustomThemeProvider } from './themes/CustomThemeProvider';
 import { GameContext } from './context/GameContext';
 import { IuseSoundControl, useSoundControl } from './hooks/sound.hook';
 import { variables } from './variables';
+import { getAppState, IAppState, saveAppState } from './utils/save';
 
-const { EASY_MODE, DEFAULT_SNAKE } = variables;
+const { EASY_MODE, DEFAULT_SNAKE, APP_STATE } = variables;
 
 const useStyles = makeStyles({
   wrapper: {
@@ -33,19 +34,68 @@ const useStyles = makeStyles({
 
 function App() {
   const classes = useStyles();
-  const screen: FullScreenHandle = useFullScreenHandle();
-  const [open, setOpen] = useState<boolean>(true);
-  const [score, setScore] = useState<number>(0);
-  const [fullScreen, setFullScreen] = useState<boolean>(screen.active);
-  const [isLightTheme, setIsLightTheme] = useState<boolean>(false);
-  const [endGame, setEndGame] = useState<boolean>(false);
-  const [sound, setSound] = useState<boolean>(true);
   const musik: IuseSoundControl = useSoundControl('./audio/musik.mp3', true);
   const eatSoundEffect: IuseSoundControl = useSoundControl('./audio/eat.mp3');
   const endSoundEffect: IuseSoundControl = useSoundControl('./audio/lose.mp3');
+  const screen: FullScreenHandle = useFullScreenHandle();
+  const [open, setOpen] = useState<boolean>(true);
+  const [score, setScore] = useState<number>(0);
+  const [isLightTheme, setIsLightTheme] = useState<boolean>(false);
+  const [endGame, setEndGame] = useState<boolean>(false);
+  const [sound, setSound] = useState<boolean>(true);
   const [mode, setMode] = useState<string>(EASY_MODE);
   const [skin, setSkin] = useState<string>(DEFAULT_SNAKE);
+  const [fullScreen, setFullScreen] = useState<boolean>(screen.active);
+
+  const savedAppState = getAppState(APP_STATE);
+
+  const updateAppState = (state: IAppState) => {
+    try {
+      const {
+        open,
+        score,
+        isLightTheme,
+        sound,
+        mode,
+        skin,
+      } = state;
   
+      setOpen(open);
+      setScore(score);
+      setIsLightTheme(isLightTheme);
+      setSound(sound);
+      setMode(mode);
+      setSkin(skin);
+    } catch (e) {
+      return;
+    }
+  }
+
+  useEffect(() => {
+    if (savedAppState) {
+      updateAppState(savedAppState);
+    }
+  }, []);
+
+  useEffect(() => {
+    const state = {
+      open,
+      score,
+      isLightTheme,
+      sound,
+      mode,
+      skin,
+    };
+    saveAppState(state, APP_STATE);
+  }, [
+    open,
+    score,
+    isLightTheme,
+    sound,
+    mode,
+    skin,
+  ]);
+
   const toggleMenu = () => {
     setOpen(!open);
 
