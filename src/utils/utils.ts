@@ -74,3 +74,17 @@ export const calculateOpacity = (num: Array<number[]>): number[] => {
 
   return result;
 };
+
+export const randomColor = (): string => {
+  const colors: string[] = [
+    '244, 67, 54',
+    '224, 64, 251',
+    '63, 81, 181',
+    '3, 169, 244',
+    '0, 188, 212',
+    '118, 255, 3',
+    '255, 235, 59'
+  ];
+
+  return colors[Math.floor((Math.random()*colors.length))];
+};

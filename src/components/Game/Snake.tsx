@@ -1,9 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
 import { calculateOpacity } from '../../utils/utils';
+import { variables } from '../../variables';
+
+const {
+  DEFAULT_SNAKE
+} = variables;
 interface ISnakeProps {
   snakeDots: Array<number[]>;
   isLightTheme: boolean;
+  skin: string;
 }
 
 type StyledProps = {
@@ -12,6 +18,7 @@ type StyledProps = {
   top: number;
   left: number;
   isLightTheme: boolean;
+  skin?: string;
 }
 
 const SnakeDot = styled.div.attrs((props: StyledProps) => ({
@@ -25,15 +32,26 @@ const SnakeDot = styled.div.attrs((props: StyledProps) => ({
   height: calc(2% + 1px);
 
   position: absolute;
-  z-index: 2;
+  z-index: ${(props: StyledProps) => props.head ? '1' : '2'};
   
   
-  box-shadow: ${(props: StyledProps) => props.head ? `0 0 15px 3px rgba(${props.isLightTheme ? '0, 0, 0,' : '255, 255, 255,'} .5);` : '0;'}
-  background: rgb${(props: StyledProps) => props.isLightTheme ? '(0, 0, 0)' : '(255, 255, 255)'};
+  box-shadow: ${(props: StyledProps) => {
+    if (props.skin !== DEFAULT_SNAKE) {
+      return props.head ? `0 0 15px 3px rgba(${props.skin}, .5)` : '0';
+    }
+    return props.head ? `0 0 15px 3px rgba(${props.isLightTheme ? '0, 0, 0,' : '255, 255, 255,'} .5)` : '0';
+  }};
+  
+  background: rgb${(props: StyledProps) => {
+    if (props.skin !== DEFAULT_SNAKE) {
+      return `(${props.skin})`;
+    }
+    return props.isLightTheme ? '(0, 0, 0)' : '(255, 255, 255)';
+  }};
 `;
 
 const Snake: React.FunctionComponent<ISnakeProps> = (props) => {
-  const { snakeDots } = props;
+  const { snakeDots, skin } = props;
 
   const opacity = calculateOpacity(snakeDots);
 
@@ -44,6 +62,7 @@ const Snake: React.FunctionComponent<ISnakeProps> = (props) => {
 
         return (
           <SnakeDot
+            skin={skin}
             opacity={opacity[i]}
             head={i === props.snakeDots.length - 1}
             top={top}

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Snake from './Snake';
 import Food from './Food';
 import Stone from './Stone';
-import { getRandomCoordinates } from '../../utils/utils';
+import { getRandomCoordinates, randomColor } from '../../utils/utils';
 import { variables } from '../../variables';
 import Axis from './Axis';
 import { GameContext } from '../../context/GameContext';
@@ -20,13 +20,15 @@ const {
   KEY_ESCAPE,
   STEP,
   EASY_MODE,
-  HARD_MODE
+  HARD_MODE,
+  DEFAULT_SNAKE
 } = variables;
 interface IGameProps {
   togglePouse: VoidFunction;
   updateScore: VoidFunction;
   gameOver: VoidFunction;
   mode: string;
+  skin: string;
 }
 
 interface IGameState {
@@ -35,6 +37,7 @@ interface IGameState {
   direction: string;
   snakeDots: Array<number[]>;
   moveSpeed: number;
+  snakeSkin: string;
 }
 
 type StyledProps = {
@@ -70,6 +73,7 @@ export default class Game extends React.Component<IGameProps, IGameState> {
     direction: string;
     snakeDots: Array<number[]>;
     moveSpeed: number;
+    snakeSkin: string;
   }
 
   constructor(props: IGameProps | Readonly<IGameProps>) {
@@ -80,6 +84,7 @@ export default class Game extends React.Component<IGameProps, IGameState> {
       stoneCords: [],
       direction: UP,
       moveSpeed: 100,
+      snakeSkin: DEFAULT_SNAKE,
       snakeDots: [
         [52,48],
         [50, 48],
@@ -211,7 +216,7 @@ export default class Game extends React.Component<IGameProps, IGameState> {
 
   checkIfEat = () => {
     const { snakeDots, foodCords } = this.state;
-    const { mode } = this.props;
+    const { mode, skin } = this.props;
     const [headTop, headLeft] = snakeDots[snakeDots.length - 1];
     const [foodTop, foodLeft] = foodCords;
 
@@ -238,7 +243,13 @@ export default class Game extends React.Component<IGameProps, IGameState> {
       if (mode === HARD_MODE) {
         this.createStones();
       }
+      if (skin !== DEFAULT_SNAKE) {
+        this.setState({
+          snakeSkin: randomColor()
+        });
+      }
     }
+
   }
 
   checkIfCollapsed = () => {
@@ -347,7 +358,7 @@ export default class Game extends React.Component<IGameProps, IGameState> {
 
   public render() {
     const { isLightTheme, isFullScreen, pouse } = this.context;
-    const { snakeDots, foodCords, stoneCords } = this.state;
+    const { snakeDots, foodCords, stoneCords, snakeSkin } = this.state;
     let stones;
     if (pouse) {
       this.pouse();
@@ -363,7 +374,7 @@ export default class Game extends React.Component<IGameProps, IGameState> {
 
     return (
       <GameField className="game-board" isLightTheme={isLightTheme} fullScreen={isFullScreen}>
-        <Snake isLightTheme={isLightTheme} snakeDots={snakeDots} />
+        <Snake skin={snakeSkin} isLightTheme={isLightTheme} snakeDots={snakeDots} />
         <Food dot={foodCords} />
         {stones}
         <Axis isLightTheme={isLightTheme} direction={DOWN} quantity={this.grid} />

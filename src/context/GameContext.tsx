@@ -12,7 +12,9 @@ export type IGameContent = {
   eatSoundEffect: any;
   endSoundEffect: any;
   mode: string;
+  skin: string,
   changeMode: (modeName: string) => void;
+  changeSkin: (skin: string) => void;
   toggleMenu: () => void;
   changeTheme: () => void;
   resetGame: () => void;
@@ -23,6 +25,7 @@ function noop() {}
 
 export const GameContext = createContext<IGameContent>({
   mode: '',
+  skin: '',
   score: 0,
   pouse: true,
   isLightTheme: null,
@@ -38,6 +41,7 @@ export const GameContext = createContext<IGameContent>({
   endSoundEffect: noop,
   setSound: noop,
   changeMode: noop,
+  changeSkin: noop,
 });
 
 export const useGameContext = () => useContext(GameContext)

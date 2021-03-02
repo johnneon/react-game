@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   createStyles,
   makeStyles,
@@ -37,13 +37,8 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const GameMenu: React.FunctionComponent<IGameMenuProps> = (props) => {
-  const { pouse, changeMode, mode } = useGameContext();
+  const { pouse, changeMode, mode, changeSkin, skin } = useGameContext();
   const classes = useStyles({ pouse });
-  const [colorMode, setColorMode] = useState<string>('easy');
-
-  const handleColorMode = (value: string) => {
-    setColorMode(value);
-  }
 
   const gameControls = [
     { value: EASY_MODE, label: "Easy" },
@@ -70,7 +65,7 @@ const GameMenu: React.FunctionComponent<IGameMenuProps> = (props) => {
           </Tooltip>
         </RadioControls>
 
-        <RadioControls setValue={handleColorMode} value={colorMode} controls={colorControls}>
+        <RadioControls setValue={changeSkin} value={skin} controls={colorControls}>
           Color mode
         </RadioControls>
 

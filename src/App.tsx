@@ -14,7 +14,7 @@ import { GameContext } from './context/GameContext';
 import { IuseSoundControl, useSoundControl } from './hooks/sound.hook';
 import { variables } from './variables';
 
-const { EASY_MODE } = variables;
+const { EASY_MODE, DEFAULT_SNAKE } = variables;
 
 const useStyles = makeStyles({
   wrapper: {
@@ -44,6 +44,7 @@ function App() {
   const eatSoundEffect: IuseSoundControl = useSoundControl('./audio/eat.mp3');
   const endSoundEffect: IuseSoundControl = useSoundControl('./audio/lose.mp3');
   const [mode, setMode] = useState<string>(EASY_MODE);
+  const [skin, setSkin] = useState<string>(DEFAULT_SNAKE);
   
   const toggleMenu = () => {
     setOpen(!open);
@@ -100,6 +101,10 @@ function App() {
     setMode(modeName);
   }
 
+  const changeSkin = (skin: string) => {
+    setSkin(skin);
+  }
+
   return (
     <CustomThemeProvider isLightTheme={isLightTheme}>
       <GameContext.Provider value={{
@@ -118,7 +123,9 @@ function App() {
         setSound: toggleSound,
         sound,
         mode,
-        changeMode
+        changeMode,
+        skin,
+        changeSkin
       }}>
       <FullScreen handle={screen} onChange={reportChange}>
         <Box className={`${classes.wrapper} app`}>
@@ -135,6 +142,7 @@ function App() {
               updateScore={updateScore}
               gameOver={gameOver}
               mode={mode}
+              skin={skin}
             />
             <Menu />
           </Box>
