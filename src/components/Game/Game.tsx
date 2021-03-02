@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Snake from './Snake';
 import Food from './Food';
+import Stone from './Stone';
 import { getRandomCoordinates } from '../../utils/utils';
 import { variables } from '../../variables';
 import Axis from './Axis';
@@ -17,16 +18,20 @@ const {
   KEY_D,
   KEY_S,
   KEY_ESCAPE,
-  STEP
+  STEP,
+  EASY_MODE,
+  HARD_MODE
 } = variables;
 interface IGameProps {
   togglePouse: VoidFunction;
   updateScore: VoidFunction;
   gameOver: VoidFunction;
+  mode: string;
 }
 
 interface IGameState {
   foodCords: number[];
+  stoneCords: Array<number[]>;
   direction: string;
   snakeDots: Array<number[]>;
   moveSpeed: number;
@@ -61,6 +66,7 @@ export default class Game extends React.Component<IGameProps, IGameState> {
   grid: null[];
   initialState: {
     foodCords: number[];
+    stoneCords: Array<number[]>;
     direction: string;
     snakeDots: Array<number[]>;
     moveSpeed: number;
@@ -71,6 +77,7 @@ export default class Game extends React.Component<IGameProps, IGameState> {
 
     this.initialState = {
       foodCords: getRandomCoordinates(),
+      stoneCords: [],
       direction: UP,
       moveSpeed: 100,
       snakeDots: [
@@ -123,28 +130,51 @@ export default class Game extends React.Component<IGameProps, IGameState> {
     }
   }
 
-  moveSnake = () => {
-
-    const dots: Array<number[]> = Array.from(this.state.snakeDots);
-    let head = dots[dots.length - 1];
+  doMove = (head: number[], direction: string, mode: string): number[] => {
     const [top, left] = head;
+    let newHead: number[] = [];
 
-    switch (this.state.direction) {
+    switch (direction) {
       case UP:
-        head = [top - STEP, left];
+        newHead = [top - STEP, left];
         break;
       case DOWN:
-        head = [top + STEP, left];
+        newHead = [top + STEP, left];
         break;
       case LEFT:
-        head = [top, left - STEP];
+        newHead = [top, left - STEP];
         break;
       case RIGHT:
-        head = [top, left + STEP];
+        newHead = [top, left + STEP];
         break;
     }
 
-    dots.push(head);
+    if (mode === EASY_MODE) {
+      if (top >= 98 && direction === DOWN) {
+        newHead = [0, left];
+      }
+      if (top < 2 && direction === UP) {
+        newHead = [98, left];
+      }
+      if (left >= 98 && direction === RIGHT) {
+        newHead = [top, 0];
+      }
+      if (left < 2 && direction === LEFT) {
+        newHead = [top, 98];
+      }
+    }
+
+    return newHead;
+  }
+
+  moveSnake = () => {
+    const { direction, snakeDots } = this.state;
+    const { mode } = this.props;
+    const dots: Array<number[]> = Array.from(snakeDots);
+    const head = dots[dots.length - 1];
+    const newHead = this.doMove(head, direction, mode);
+
+    dots.push(newHead);
     dots.shift();
 
     this.commandObserve();
@@ -154,6 +184,10 @@ export default class Game extends React.Component<IGameProps, IGameState> {
   gameOver = () => {
     this.setState(this.initialState);
     this.props.gameOver();
+  }
+
+  reset = () => {
+    this.setState(this.initialState);
   }
 
   eanlargeSnake = () => {
@@ -167,7 +201,7 @@ export default class Game extends React.Component<IGameProps, IGameState> {
   }
 
   increaseSpeed = () => {
-    if (this.state.moveSpeed > 10) {
+    if (this.state.moveSpeed > 50) {
       this.setState({
         moveSpeed: this.state.moveSpeed - 2
       });
@@ -176,15 +210,34 @@ export default class Game extends React.Component<IGameProps, IGameState> {
   }
 
   checkIfEat = () => {
-    const [headTop, headLeft] = this.state.snakeDots[this.state.snakeDots.length - 1];
-    const [foodTop, foodLeft] = this.state.foodCords;
+    const { snakeDots, foodCords } = this.state;
+    const { mode } = this.props;
+    const [headTop, headLeft] = snakeDots[snakeDots.length - 1];
+    const [foodTop, foodLeft] = foodCords;
+
+    const checkCoordinates = () => {
+      const [foodTop, foodLeft] = getRandomCoordinates();
+      const check = snakeDots.find(([dotTop, dotLeft]) => dotTop === foodTop && dotLeft === foodLeft);
+
+      if (check) {
+        return getRandomCoordinates();
+      }
+
+      return [foodTop, foodLeft];
+    }
+
     if (headTop === foodTop && headLeft === foodLeft) {
       this.setState({
-        foodCords: getRandomCoordinates()
+        foodCords: checkCoordinates()
       });
       this.props.updateScore();
       this.eanlargeSnake();
-      this.increaseSpeed();
+      if (mode !== EASY_MODE) {
+        this.increaseSpeed();
+      }
+      if (mode === HARD_MODE) {
+        this.createStones();
+      }
     }
   }
 
@@ -205,6 +258,15 @@ export default class Game extends React.Component<IGameProps, IGameState> {
   checkIfOutOfBorderes = () => {
     const [top, left] = this.state.snakeDots[this.state.snakeDots.length - 1];
     if (top >= 100 || top < 0 || left >= 100 || left < 0) {
+      this.gameOver();
+    }
+  }
+
+  checkIfEatStone = () => {
+    const { stoneCords, snakeDots } = this.state;
+    const [headTop, headLeft] = snakeDots[snakeDots.length - 1];
+    const check = stoneCords?.find(([stoneTop, stoneLeft]) => stoneTop === headTop && stoneLeft === headLeft);
+    if (check) {
       this.gameOver();
     }
   }
@@ -232,25 +294,78 @@ export default class Game extends React.Component<IGameProps, IGameState> {
     window.removeEventListener('keydown', this.handleKeyDown);
   }
 
-  componentDidUpdate = () => {
-    this.checkIfOutOfBorderes();
+  componentDidUpdate = (prevProps: IGameProps) => {
+    if (prevProps.mode !== this.props.mode) {
+      this.reset();
+    }
+    const { mode } = this.props;
     this.checkIfCollapsed();
     this.checkIfEat();
+    if (mode !== EASY_MODE) {
+      this.checkIfOutOfBorderes();
+    }
+    if (mode === HARD_MODE) {
+      this.checkIfEatStone();
+    }
   }
+
+  createStones = () => {
+    const { snakeDots } = this.state;
+    
+    const checkCoordinates = (): Array<number[]> => {
+      let numOfStones = 1;
+
+      if (snakeDots.length > 3 && snakeDots.length < 8) {
+        numOfStones = 2;
+      } else if (snakeDots.length > 8 && snakeDots.length < 15) {
+        numOfStones = 3;
+      } else if (snakeDots.length > 15 && snakeDots.length < 23) {
+        numOfStones = 4;
+      } else if (snakeDots.length > 22) {
+        numOfStones = 5;
+      }
+
+      const stones = [];
+      for (let i = 0; i < numOfStones; i++) {
+        console.log(numOfStones);
+        const [stoneTop, stoneLeft] = getRandomCoordinates();
+        const check = snakeDots.find(([dotTop, dotLeft]) => dotTop === stoneTop && dotLeft === stoneLeft);
+  
+        if (check) {
+          stones.push(getRandomCoordinates());
+        }
+        
+        stones.push([stoneTop, stoneLeft]);
+      }
+      return stones;
+    }
+
+    this.setState({
+      stoneCords: checkCoordinates()
+    });
+  };
 
   public render() {
     const { isLightTheme, isFullScreen, pouse } = this.context;
-    const { snakeDots, foodCords } = this.state;
+    const { snakeDots, foodCords, stoneCords } = this.state;
+    let stones;
     if (pouse) {
       this.pouse();
     } else {
       this.play();
     }
 
+    if (stoneCords.length > 0) {
+      stones = stoneCords.map((stone: number[], i) => {
+        return <Stone key={i} dot={stone} />;
+      });
+    }
+
     return (
       <GameField className="game-board" isLightTheme={isLightTheme} fullScreen={isFullScreen}>
         <Snake isLightTheme={isLightTheme} snakeDots={snakeDots} />
         <Food dot={foodCords} />
+        {stones}
         <Axis isLightTheme={isLightTheme} direction={DOWN} quantity={this.grid} />
         <Axis isLightTheme={isLightTheme} direction={RIGHT} quantity={this.grid} />
       </GameField>

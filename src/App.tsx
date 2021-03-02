@@ -12,6 +12,9 @@ import Menu from './components/UI/Menu';
 import { CustomThemeProvider } from './themes/CustomThemeProvider';
 import { GameContext } from './context/GameContext';
 import { IuseSoundControl, useSoundControl } from './hooks/sound.hook';
+import { variables } from './variables';
+
+const { EASY_MODE } = variables;
 
 const useStyles = makeStyles({
   wrapper: {
@@ -40,6 +43,7 @@ function App() {
   const musik: IuseSoundControl = useSoundControl('./audio/musik.mp3', true);
   const eatSoundEffect: IuseSoundControl = useSoundControl('./audio/eat.mp3');
   const endSoundEffect: IuseSoundControl = useSoundControl('./audio/lose.mp3');
+  const [mode, setMode] = useState<string>(EASY_MODE);
   
   const toggleMenu = () => {
     setOpen(!open);
@@ -59,23 +63,26 @@ function App() {
     }
     setOpen(!open);
     setEndGame(!endGame);
-  }
+  };
 
   const updateScore = () => {
     if (sound) {
       eatSoundEffect.play();
     }
     setScore(score + 1);
-  }
+  };
 
   const resetGame = () => {
-    setEndGame(!endGame);
+    if (sound) {
+      musik.stop();
+    }
     setScore(0);
-  }
+    setEndGame(!endGame);
+  };
 
   const setTheme = () => {
     setIsLightTheme(!isLightTheme);
-  }
+  };
 
   const reportChange = useCallback((fullScreen: boolean, screen: FullScreenHandle) => {
       setFullScreen(screen.active);
@@ -83,6 +90,14 @@ function App() {
 
   const toggleSound = () => {
     setSound(!sound);
+  };
+
+  const changeMode = (modeName: string) => {
+    if (sound) {
+      musik.stop();
+    }
+    setScore(0);
+    setMode(modeName);
   }
 
   return (
@@ -101,7 +116,9 @@ function App() {
         eatSoundEffect,
         endSoundEffect,
         setSound: toggleSound,
-        sound
+        sound,
+        mode,
+        changeMode
       }}>
       <FullScreen handle={screen} onChange={reportChange}>
         <Box className={`${classes.wrapper} app`}>
@@ -117,6 +134,7 @@ function App() {
               togglePouse={toggleMenu}
               updateScore={updateScore}
               gameOver={gameOver}
+              mode={mode}
             />
             <Menu />
           </Box>

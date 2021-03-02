@@ -37,14 +37,9 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const GameMenu: React.FunctionComponent<IGameMenuProps> = (props) => {
-  const { pouse } = useGameContext();
+  const { pouse, changeMode, mode } = useGameContext();
   const classes = useStyles({ pouse });
-  const [gameMode, setGameMode] = useState<string>('easy');
   const [colorMode, setColorMode] = useState<string>('easy');
-
-  const handleGameMode = (value: string) => {
-    setGameMode(value);
-  }
 
   const handleColorMode = (value: string) => {
     setColorMode(value);
@@ -68,7 +63,7 @@ const GameMenu: React.FunctionComponent<IGameMenuProps> = (props) => {
 
         <MenuHeader>Game settings</MenuHeader>
 
-        <RadioControls setValue={handleGameMode} value={gameMode} controls={gameControls}>
+        <RadioControls setValue={changeMode} value={mode} controls={gameControls}>
           Game mode - 
           <Tooltip title={text}>
             <HelpIcon />
