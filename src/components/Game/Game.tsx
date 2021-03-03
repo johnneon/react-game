@@ -329,7 +329,6 @@ export default class Game extends React.Component<IGameProps, IGameState> {
 
   componentDidUpdate = (prevProps: IGameProps) => {
     if (prevProps.isChanged !== this.props.isChanged) {
-      console.log(123);
       this.reset();
     }
     const { mode } = this.props;
@@ -362,7 +361,6 @@ export default class Game extends React.Component<IGameProps, IGameState> {
 
       const stones = [];
       for (let i = 0; i < numOfStones; i++) {
-        console.log(numOfStones);
         const [stoneTop, stoneLeft] = getRandomCoordinates();
         const check = snakeDots.find(([dotTop, dotLeft]) => dotTop === stoneTop && dotLeft === stoneLeft);
   

@@ -71,13 +71,11 @@ export const saveScore = (score: IScore) => {
     const sortedData = prevScore?.sort((a, b) => b.score - a.score);
 
     if (sortedData.length > 10) {
-      console.log(sortedData);
       sortedData.splice(-1, 1);
     }
 
     window.localStorage.setItem(SCORE, JSON.stringify(sortedData));
   } catch (e) {
-    console.log(e);
     return;
   }
 }

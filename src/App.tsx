@@ -112,7 +112,6 @@ function App() {
   };
 
   const gameOver = () => {
-    console.log(score);
     if (sound) {
       musik.stop();
       endSoundEffect.play();
