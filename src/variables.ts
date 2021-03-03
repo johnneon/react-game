@@ -20,5 +20,5 @@ export const variables = {
   SOUND_SETTINGS: 'sound',
   SCORE: 'score',
   APP_STATE: 'app_state',
-  GAME_STATE: 'game_state'
+  GAME_STATE: 'game_state',
 };

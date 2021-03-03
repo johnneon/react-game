@@ -2,29 +2,19 @@ import React from 'react';
 import {
   makeStyles,
   createStyles,
-  Table,
-  TableCell,
-  TableContainer,
-  TableBody,
-  TableRow,
-  Paper,
   Box,
   Grid,
   Button,
   Theme,
-  TableHead
+  List,
+  ListItem,
+  ListItemText
 } from '@material-ui/core';
 import MenuHeader from './MenuHeader';
+import { getScore, IScore } from '../../utils/save';
 
 interface IScoreTableProps {
   goBack: () => void;
-}
-
-interface IScoreItem {
-  name: 'Qwerty';
-  mode: 'Easy';
-  score: 20;
-  _id: string
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -32,79 +22,55 @@ const useStyles = makeStyles((theme: Theme) =>
     btn: {
       color: theme.palette.primary.contrastText,
       margin: '0 auto 10px'
+    },
+    listItem: {
+      color: theme.palette.primary.contrastText,
+      borderBottom: `1px solid ${theme.palette.primary.contrastText}`,
+      display: 'flex',
+      justifyContent: 'space-between',
+      '&:last-child': {
+        borderBottom: 0
+      },
+      '& .MuiListItemText-root': {
+        flex: 'none'
+      }
     }
   })
 );
-
-
-const Easy = new Array(5).fill({
-  name: 'Qwerty',
-  mode: 'Easy',
-  score: 20,
-  _id: '123'
-});
-const Normal = new Array(5).fill({
-  name: 'Qwerty',
-  mode: 'Normal',
-  score: 20,
-  _id: '123'
-});
-const Hard = new Array(5).fill({
-  name: 'Qwerty',
-  mode: 'Hard',
-  score: 20,
-  _id: '123'
-});
-
 const ScoreTable: React.FunctionComponent<IScoreTableProps> = (props) => {
   const classes = useStyles();
-  const easy: IScoreItem[] = [...Easy];
-  const normal: IScoreItem[] = [...Normal];
-  const hard: IScoreItem[] = [...Hard];
+  const data: IScore[] = getScore();
 
   return (
     <Box>
 
       <Grid container spacing={3}>
 
-        <MenuHeader>Game settings</MenuHeader>
+        <MenuHeader>Score</MenuHeader>
 
-        <TableContainer component={Paper}>
-          <Table size="small">
-          <TableHead>
-          <TableRow>
-              <TableCell>Easy</TableCell>
-              <TableCell>Normal</TableCell>
-              <TableCell>Hard</TableCell>
-            </TableRow>
-          </TableHead>
-            <TableBody>
-
-              {easy.map((row: IScoreItem, i) => (
-                <TableRow key={i}>
-                  <TableCell component="th" scope="row">
-                  {row.name} - {row.score}
-                  </TableCell>
-                </TableRow>
-              ))}
-              {normal.map((row: IScoreItem, i) => (
-                <TableRow key={i}>
-                  <TableCell component="th" scope="row">
-                  {row.name} - {row.score}
-                  </TableCell>
-                </TableRow>
-              ))}
-              {hard.map((row: IScoreItem, i) => (
-                <TableRow key={i}>
-                  <TableCell component="th" scope="row">
-                  {row.name} - {row.score}
-                  </TableCell>
-                </TableRow>
-              ))}
-
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <Grid
+          container
+          direction="column"
+          justify="center"
+          alignItems="center"
+        >
+          <List dense={true}>
+              {data.map((scoreItem, i) => {
+                const { name, score } = scoreItem;
+                return (
+                <ListItem className={classes.listItem} key={i}>
+                  <ListItemText
+                    primary={`${name}:`}
+                  />
+                  <ListItemText
+                    primary={`${score}`}
+                  />
+                </ListItem>
+                );
+              })}
+            </List>
+          
+        </Grid>
 
         <Button
             variant="outlined"

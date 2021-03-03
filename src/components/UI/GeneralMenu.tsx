@@ -30,17 +30,22 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const GeneralMenu: React.FunctionComponent<IGeneralMenuProps> = (props) => {
   const classes = useStyles();
-  const { toggleMenu } = useGameContext();
+  const { toggleMenu, resetGame, isGameStarted, startGame } = useGameContext();
 
-  const toSettings = (event: React.MouseEvent) => {
+  const toSettings = () => {
     props.changeMenu(GAME_SETTINGS);
   };
-  const toSound = (event: React.MouseEvent) => {
+  const toSound = () => {
     props.changeMenu(SOUND_SETTINGS);
   };
-  const toScore = (event: React.MouseEvent) => {
+  const toScore = () => {
     props.changeMenu(SCORE);
   };
+  const newGame = () => {
+    toggleMenu();
+    resetGame();
+    startGame(true);
+  }
 
   return (
       <Grid container spacing={3}>
@@ -48,20 +53,24 @@ const GeneralMenu: React.FunctionComponent<IGeneralMenuProps> = (props) => {
         <MenuHeader>Menu</MenuHeader>
 
         <Grid item container direction="column" alignItems="center">
-          <Button
-            variant="outlined"
-            color="inherit"
-            className={classes.btn}
-            onClick={toggleMenu}
-          >
-            Continue
-          </Button>
+          {
+            isGameStarted
+            ? <Button
+              variant="outlined"
+              color="inherit"
+              className={classes.btn}
+              onClick={toggleMenu}
+            >
+              Continue
+            </Button>
+            : ''
+          }
 
           <Button
             variant="outlined"
             color="inherit"
             className={classes.btn}
-            onClick={toggleMenu}
+            onClick={newGame}
           >
             New game
           </Button>

@@ -31,6 +31,8 @@ interface IGameProps {
   gameOver: VoidFunction;
   mode: string;
   skin: string;
+  isChanged: boolean;
+  startGame: (start: boolean) => void;
 }
 
 interface IGameState {
@@ -189,8 +191,11 @@ export default class Game extends React.Component<IGameProps, IGameState> {
   };
 
   gameOver = () => {
+    const { gameOver, startGame } = this.props;
+
     this.setState(this.initialState);
-    this.props.gameOver();
+    gameOver();
+    startGame(false);
   }
 
   reset = () => {
@@ -248,6 +253,10 @@ export default class Game extends React.Component<IGameProps, IGameState> {
       if (skin !== DEFAULT_SNAKE) {
         this.setState({
           snakeSkin: randomColor()
+        });
+      } else {
+        this.setState({
+          snakeSkin: DEFAULT_SNAKE
         });
       }
     }
@@ -319,10 +328,10 @@ export default class Game extends React.Component<IGameProps, IGameState> {
   }
 
   componentDidUpdate = (prevProps: IGameProps) => {
-    // if (prevProps.mode !== this.props.mode) {
-    //   console.log(123);
-    //   this.reset();
-    // }
+    if (prevProps.isChanged !== this.props.isChanged) {
+      console.log(123);
+      this.reset();
+    }
     const { mode } = this.props;
     this.checkIfCollapsed();
     this.checkIfEat();

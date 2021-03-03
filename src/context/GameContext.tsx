@@ -2,10 +2,11 @@ import { createContext, useContext } from 'react';
 
 export type IGameContent = {
   pouse: boolean,
+  endGame: boolean;
   isLightTheme: boolean | null,
   isFullScreen: boolean | null,
-  endGame: boolean | null;
   sound: boolean | null;
+  isGameStarted: boolean | null;
   score: number;
   setFullScreen: any,
   musik: any;
@@ -19,6 +20,7 @@ export type IGameContent = {
   changeTheme: () => void;
   resetGame: () => void;
   setSound: () => void;
+  startGame: (start: boolean) => void;
 }
 
 function noop() {}
@@ -30,8 +32,9 @@ export const GameContext = createContext<IGameContent>({
   pouse: true,
   isLightTheme: null,
   isFullScreen: null,
-  endGame: null,
+  endGame: false,
   sound: null,
+  isGameStarted: null,
   setFullScreen: noop,
   changeTheme: noop,
   toggleMenu: noop,
@@ -42,6 +45,7 @@ export const GameContext = createContext<IGameContent>({
   setSound: noop,
   changeMode: noop,
   changeSkin: noop,
+  startGame: noop
 });
 
 export const useGameContext = () => useContext(GameContext)

@@ -8,6 +8,7 @@ import {
   IconButton,
   Theme
 } from '@material-ui/core';
+import { useGameContext } from '../../context/GameContext';
 
 interface IHeaderProps {
   toggleMenu: (event: React.MouseEvent<HTMLButtonElement>) => void;
@@ -28,6 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const Header: React.FunctionComponent<IHeaderProps> = (props) => {
+  const { endGame } = useGameContext();
   const classes = useStyles();
 
   return (
@@ -37,6 +39,7 @@ const Header: React.FunctionComponent<IHeaderProps> = (props) => {
           <IconButton
             className={classes.text}
             onClick={props.toggleMenu}
+            disabled={endGame}
             edge="start"
             aria-label="menu"
           >

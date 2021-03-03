@@ -1,3 +1,4 @@
+import React, {useState} from 'react';
 import {
   Typography,
   Theme,
@@ -7,8 +8,8 @@ import {
   TextField,
   withStyles
 } from '@material-ui/core';
-import React from 'react';
 import { useGameContext } from '../../context/GameContext';
+import { saveScore } from '../../utils/save';
 
 interface IGameOverScreenProps {
 }
@@ -52,9 +53,27 @@ const CssTextField = withStyles((theme: Theme) => ({
 const GameOverScreen: React.FunctionComponent<IGameOverScreenProps> = (props) => {
   const classes = useStyles();
   const { score, resetGame } = useGameContext();
+  const [name, setName] = useState<string>('');
+  const [error, setError] = useState<boolean>(false);
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setName(event.target.value);
+  };
+
+  const handleKeyPress = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter') {
+      handleClick();
+    }
+  };
 
   const handleClick = () => {
-    resetGame();
+    const regex = /[a-zA-Z0-9]+/;
+    if (name.length < 3 || name.length > 6 || !regex.test(name)) {
+      setError(true);
+    } else {
+      resetGame();
+      saveScore({ name, score });
+    }
   };
 
   return (
@@ -63,6 +82,11 @@ const GameOverScreen: React.FunctionComponent<IGameOverScreenProps> = (props) =>
       <Typography className={classes.text} variant="h3">Your score is {score}!</Typography>
       <CssTextField
         label="Enter your name"
+        onChange={handleChange}
+        onKeyPress={handleKeyPress}
+        value={name}
+        helperText="Max lingth 6. Min length 3."
+        error={error}
       />
       <Button
         variant="outlined"

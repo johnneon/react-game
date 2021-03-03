@@ -46,8 +46,8 @@ function App() {
   const [mode, setMode] = useState<string>(EASY_MODE);
   const [skin, setSkin] = useState<string>(DEFAULT_SNAKE);
   const [fullScreen, setFullScreen] = useState<boolean>(screen.active);
-
-  const savedAppState = getAppState(APP_STATE);
+  const [isChanged, setIsChanged] = useState<boolean>(false);
+  const [isGameStarted, setIsGameStarted] = useState<boolean>(false);
 
   const updateAppState = (state: IAppState) => {
     try {
@@ -58,6 +58,7 @@ function App() {
         sound,
         mode,
         skin,
+        isGameStarted
       } = state;
   
       setOpen(open);
@@ -66,12 +67,14 @@ function App() {
       setSound(sound);
       setMode(mode);
       setSkin(skin);
+      setIsGameStarted(isGameStarted);
     } catch (e) {
       return;
     }
   }
 
   useEffect(() => {
+    const savedAppState = getAppState(APP_STATE);
     if (savedAppState) {
       updateAppState(savedAppState);
     }
@@ -85,6 +88,7 @@ function App() {
       sound,
       mode,
       skin,
+      isGameStarted
     };
     saveAppState(state, APP_STATE);
   }, [
@@ -94,6 +98,7 @@ function App() {
     sound,
     mode,
     skin,
+    isGameStarted
   ]);
 
   const toggleMenu = () => {
@@ -113,7 +118,7 @@ function App() {
       endSoundEffect.play();
     }
     setOpen(!open);
-    setEndGame(!endGame);
+    setEndGame(true);
   };
 
   const updateScore = () => {
@@ -128,7 +133,8 @@ function App() {
       musik.stop();
     }
     setScore(0);
-    setEndGame(!endGame);
+    setEndGame(false);
+    setIsChanged(!isChanged);
   };
 
   const setTheme = () => {
@@ -136,7 +142,7 @@ function App() {
   };
 
   const reportChange = useCallback((fullScreen: boolean, screen: FullScreenHandle) => {
-      setFullScreen(screen.active);
+    setFullScreen(screen.active);
   }, []);
 
   const toggleSound = () => {
@@ -149,10 +155,15 @@ function App() {
     }
     setScore(0);
     setMode(modeName);
+    setIsChanged(!isChanged);
   }
 
   const changeSkin = (skin: string) => {
     setSkin(skin);
+  }
+
+  const startGame = (start: boolean) => {
+    setIsGameStarted(start);
   }
 
   return (
@@ -175,7 +186,9 @@ function App() {
         mode,
         changeMode,
         skin,
-        changeSkin
+        changeSkin,
+        startGame,
+        isGameStarted
       }}>
       <FullScreen handle={screen} onChange={reportChange}>
         <Box className={`${classes.wrapper} app`}>
@@ -193,6 +206,8 @@ function App() {
               gameOver={gameOver}
               mode={mode}
               skin={skin}
+              isChanged={isChanged}
+              startGame={startGame}
             />
             <Menu />
           </Box>
