@@ -31,8 +31,15 @@ code {
 }
 
 .fullscreen.fullscreen-enabled .game-board {
-  width: 100vw;
-  height: 100vw;
+  width: calc(100vh - 128px);
+  height: calc(100vh - 128px);
+}
+
+@media (max-width: 1100px) {
+  .fullscreen.fullscreen-enabled .game-board {
+    width: 100vw;
+    height: 100vw;
+  }
 }
 
 .fullscreen.fullscreen-enabled .app {
